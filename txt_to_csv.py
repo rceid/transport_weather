@@ -8,16 +8,16 @@ import time
 import logging
 
 TOPIC = {
-    "BH": [], #batch_header
-    "B2": [], #batch_header2
-    "B3": [], #batch_header3
+    "BH": [],
+    "B2": [],
+    "B3": [],
     "administrative": [], #two codes 01 and W1
     "02": [], #offense
     #"property":[], #two groups
-    "04":[], #victim
-    "05": [] #offender
+    "04":[],
+    "05": []
     #"arrestee": [], 
-    #"07": [] #arrestB
+    #"07": [] 
     }
 
 
@@ -94,7 +94,7 @@ def parse_bh_other(rec, cat):
     ori = get_code(rec, 4, 13)
     pop = get_code(rec, 25, 34)
     pop = get_num(pop)
-    col = [st, ori, pop]
+    cols = [st, ori, pop]
     TOPIC[cat].append(cols)
 
 def parse_admin(rec):
@@ -118,7 +118,7 @@ def parse_admin(rec):
     num_arrestee = get_num(num_arrestee)
     off = get_code(rec, 58, 61)
     off = fc.offenses.get(off, "")
-    col = [st, ori, i_no, i_yr, i_mo, i_day, hour, num_off, num_vic,\
+    cols = [st, ori, i_no, i_yr, i_mo, i_day, hour, num_off, num_vic,\
            num_offender, num_arrestee, off]
     TOPIC[cat].append(cols)
     
@@ -140,10 +140,10 @@ def parse_offense(rec, cat):
     weap = fc.weapon.get(weap, "")
     auto = get_letter(rec, 50)
     auto = fc.automatic.get(auto,"")
-    bias_ = get_code(rec 57, 59)
+    bias_ = get_code(rec, 57, 59)
     bias_grp = fc.bias_group.get(bias_, "")
     bias_ = fc.bias.get(bias_, "")
-    cols = [st, ori, i_no, i_yr, i_mo, i_day, ucr, att_comp, loc_type\
+    cols = [st, ori, i_no, i_yr, i_mo, i_day, ucr, att_comp, loc_type,\
             weap, auto, bias_, bias_grp]
     TOPIC[cat].append(cols)
         
@@ -169,8 +169,8 @@ def parse_victim(rec, cat):
     ethni = get_letter(rec, 71)
     ethni = fc.race.get(ethni, "")
     a_circum = get_code(rec, 73, 75)
-    a_grp = fc.circumstance_group.get(a_cricum, "")
-    a_circum = fc.circumstances.get(a_cricum, "")
+    a_grp = fc.circumstance_group.get(a_circum, "")
+    a_circum = fc.circumstances.get(a_circum, "")
     cols = [st, ori, i_no, i_yr, i_mo, i_day, v_id, ucr, v_type,\
             age_, sex_, race_, ethni, a_circum, a_grp]
     TOPIC[cat].append(cols)
@@ -190,7 +190,7 @@ def parse_offender(rec, cat):
     sex_ = fc.sex.get(sex_, "")
     race_ = get_letter(rec, 38)
     race_ = fc.race.get(race_, "")
-    col = [st, ori, i_no, i_yr, i_mo, i_day, o_id, age_, sex_, race_]
+    cols = [st, ori, i_no, i_yr, i_mo, i_day, o_id, age_, sex_, race_]
     TOPIC[cat].append(cols)
     
 def get_code(record, lb, ub):
@@ -216,10 +216,8 @@ def get_num(num):
     
 # def parse_property(rec):
 #     cat = "property"
-
 # def parse_arrestee(rec):
 #     cat = "arrestee"
-
 # def parse_arrrest(record, cat):
 
 

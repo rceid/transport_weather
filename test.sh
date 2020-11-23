@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 mkdir ./logs
-year=2018
+year=2019
 while [ $year -le 2019 ]
 do
 	cat testdata.txt | ./txt_to_csv.py $year
