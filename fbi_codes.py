@@ -4,6 +4,63 @@ state_code = us.states.mapping('fips', 'name')
 
 state_abbr = us.states.mapping('abbr', 'name')
 
+
+circumstance = {
+    "01":"Argument",
+    "02":"Assault on Law Enf. Officer(s)",
+    "03":"Drug Dealing",
+    "04":"Gangland",
+    "05":"Juvenile Gang",
+    "06":"Lovers' Quarrel",
+    "07":"Mercy Killing",
+    "08":"Other Felony Involved",
+    "09":"Other Circumstances",
+    "10":"Unknown Circumstances",
+    "30":"Child Playing With Weapon",
+    "31":"Gun-Cleaning Accident",
+    "32":"Hunting Accident",
+    "33":"Other Negligent Weapon Handling",
+    "34":"Other Negligent Killings",
+    "20":"Criminal Killed by Private Citizen",
+    "21":"Criminal Killed by Police Officer"
+}
+
+circumstance_group = {
+    "01":"Aggravated Assault/Murder",
+    "02":"Aggravated Assault/Murder",
+    "03":"Aggravated Assault/Murder",
+    "04":"Aggravated Assault/Murder",
+    "05":"Aggravated Assault/Murder",
+    "06":"Aggravated Assault/Murder",
+    "07":"Aggravated Assault/Murder",
+    "08":"Aggravated Assault/Murder",
+    "09":"Aggravated Assault/Murder",
+    "10":"Aggravated Assault/Murder",
+    "30":"Negligent Manslaughter", 
+    "31":"Negligent Manslaughter", 
+    "32":"Negligent Manslaughter", 
+    "33":"Negligent Manslaughter", 
+    "34":"Negligent Manslaughter", 
+    "20":"Justifiable Homicide",
+    "21":"Justifiable Homicide"
+}
+race = {
+        "W":"White",
+        "B":"Black",
+        "I":"American Indian/Alaskan Native",
+        "A":"Asian/Pacific Islander",
+        "U":"Unknown",
+        "H":"Hispanic",
+        "N":"Not Hispanic"
+        }
+
+age = {
+       "NN":0,
+       "NB":0,
+       "BB":0.5,
+       "00":None,
+       }
+
 sex = {
        "M":"Male",
        "F":"Female",
