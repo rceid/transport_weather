@@ -21,12 +21,12 @@ TOPIC = {
     }
 
 
-def go(text):
+def parse(text):
     CSV_FOLDER = "./CSVs"
     os.mkdir(CSV_FOLDER)
     start = time.perf_counter()
     lines = text.splitlines()
-    n= len(lines)
+    n = len(lines)
     logging.info("\n{} minutes to tokenize {} lines".format((time.perf_counter() - start)/60, n))
     parse = time.perf_counter()
     for record in lines: #parsing each record
@@ -39,20 +39,17 @@ def go(text):
             parse_admin(record)
         elif cat == "02":
             parse_offense(record, cat)
-# =============================================================================
-#         elif cat == "03" or cat == "W3":
-#             parse_property(record)
-# =============================================================================
         elif cat == "04":
             parse_victim(record, cat)
         elif cat == "05":
             parse_offender(record, cat)
-# =============================================================================
+#         elif cat == "03" or cat == "W3":
+#             parse_property(record)
 #         elif cat == "06" or cat == "W6":
 #             parse_arrestee(record)
 #         elif cat == "07":
 #             parse_arrrest(record, cat)
-# =============================================================================
+
     logging.info("\n{} minutes to parse all text".format((parse - time.perf_counter())/60))
     to_csv = time.perf_counter
     for topic, rows in TOPIC: #writing all records to csv
@@ -62,28 +59,10 @@ def go(text):
                 writer.writerows(rows)
     end = time.perf_counter
     logging.info("\n{} minutes to write text to csv \n{} lines per minute".\
-                 format((end - to_csv)/60, n/((end - start)/ 60))
-    logging.info("\nCSVs written, script complete: {}".format(time.ctime(time.time())))
+                 format((end - to_csv)/60, n/((end - start)/ 60)))
+    logging.info("\nCSVs written, script complete: {}".\
+                 format(time.ctime(time.time())))
 
-def get_code(record, lb, ub):
-    try:
-        code = record[lb:ub]
-        return code
-    except:
-        return None
-    
-def get_letter(record, idx):
-    try:
-        code = record[idx]
-        return code
-    except:
-        return None
-def get_num(num):
-    try:
-        num = int(num)
-        return num
-    except:
-        return None
     
 def parse_bh(rec, cat):
     st = get_code(rec, 71, 73)
@@ -93,37 +72,35 @@ def parse_bh(rec, cat):
     nbr_mo = get_code(rec, 29, 31)
     city = get_code(rec, 41, 71)
     div = get_letter(rec, 75)
-    div = fc.division.get(div, None)
+    div = fc.division.get(div, "")
     reg = get_letter(rec, 76)
-    reg = fc.region.get(reg, None)
+    reg = fc.region.get(reg, "")
     loc = get_letter(rec, 77)
-    loc = fc.agency.get(loc, None)
+    loc = fc.agency.get(loc, "")
     city_flag = get_letter(rec, 78)
-    city_flag = fc.y_n.get(city_flag, None)
+    city_flag = fc.y_n.get(city_flag, "")
     office = get_code(rec, 88, 92)
     nibrs_flag= get_letter(rec, 96)
-    nibrs_flag = fc.flag.get(nibrs_flag, None)
+    nibrs_flag = fc.flag.get(nibrs_flag, "")
     pop = get_code(rec, 105, 114)
     pop = get_num(pop)
     cols = [st, ori, i_no, nbr_yr, nbr_mo, city, div, reg, loc, city_flag,\
             office, nibrs_flag, pop]
     TOPIC[cat].append(cols)
     
-        
 def parse_bh_other(rec, cat):
     st = get_code(rec, 2, 4)
-    st = fc.state_code.get(st, None)
+    st = fc.state_code.get(st, "")
     ori = get_code(rec, 4, 13)
     pop = get_code(rec, 25, 34)
     pop = get_num(pop)
     col = [st, ori, pop]
     TOPIC[cat].append(cols)
-        
 
 def parse_admin(rec):
     cat = "administrative"
     st = get_code(rec, 2, 4)
-    st = fc.state_code.get(st, None)
+    st = fc.state_code.get(st, "")
     ori = get_code(rec, 4, 13)
     i_no = get_code(rec, 13, 25)
     i_yr = get_code(rec, 25, 29)
@@ -140,60 +117,115 @@ def parse_admin(rec):
     num_arrestee = get_code(rec, 43, 45)
     num_arrestee = get_num(num_arrestee)
     off = get_code(rec, 58, 61)
-    off = fc.offenses.get(off, None)
+    off = fc.offenses.get(off, "")
     col = [st, ori, i_no, i_yr, i_mo, i_day, hour, num_off, num_vic,\
-           num_offender, num_arrestee]
+           num_offender, num_arrestee, off]
+    TOPIC[cat].append(cols)
     
-        
 def parse_offense(rec, cat):
     st = get_code(rec, 2, 4)
-    st = fc.state_code.get(st, None)
+    st = fc.state_code.get(st, "")
     ori = get_code(rec, 4, 13)
     i_no = get_code(rec, 13, 25)
     i_yr = get_code(rec, 25, 29)
     i_mo = get_code(rec, 29, 31)
     i_day = get_code(rec, 31, 33)
     ucr = get_code(rec, 33, 36)
-    ucr = fc.offenses.get(ucr, None)
+    ucr = fc.offenses.get(ucr, "")
     att_comp = get_letter(rec, 36)
-    att_comp = fc.attempt_complete.get(rec, None)
+    att_comp = fc.attempt_complete.get(rec, "")
     loc_type = get_code(rec, 40, 42)
-    loc_type = location.get(loc_type, None)
+    loc_type = fc.location.get(loc_type, "")
     weap = get_code(rec, 48, 50)
-    weap = fc.weapon.get(weap, None)
-    auto = get_letter(rec, )
-    get_code(rec)
-
-# =============================================================================
-# def parse_property(rec):
-#     cat = "property"
-#     return None
-# =============================================================================
+    weap = fc.weapon.get(weap, "")
+    auto = get_letter(rec, 50)
+    auto = fc.automatic.get(auto,"")
+    bias_ = get_code(rec 57, 59)
+    bias_grp = fc.bias_group.get(bias_, "")
+    bias_ = fc.bias.get(bias_, "")
+    cols = [st, ori, i_no, i_yr, i_mo, i_day, ucr, att_comp, loc_type\
+            weap, auto, bias_, bias_grp]
+    TOPIC[cat].append(cols)
         
 def parse_victim(rec, cat):
-    return None
-        
+    st = get_code(rec, 2, 4)
+    st = fc.state_code.get(st, "")
+    ori = get_code(rec, 4, 13)
+    i_no = get_code(rec, 13, 25)
+    i_yr = get_code(rec, 25, 29)
+    i_mo = get_code(rec, 29, 31)
+    i_day = get_code(rec, 31, 33)
+    v_id = get_code(rec, 33, 36)
+    ucr = get_code(rec, 36, 39)
+    ucr = fc.offenses.get(ucr, "")
+    v_type = get_letter(rec, 66)
+    v_type = fc.victim_type.get(v_type, "")
+    age_ = get_code(rec, 67, 69)
+    age_ = get_num(fc.age(age_, ""))
+    sex_ = get_letter(rec, 69)
+    sex_ = fc.sex.get(sex_, "")
+    race_ = get_letter(rec, 70)
+    race_ = fc.race.get(race_, "")
+    ethni = get_letter(rec, 71)
+    ethni = fc.race.get(ethni, "")
+    a_circum = get_code(rec, 73, 75)
+    a_grp = fc.circumstance_group.get(a_cricum, "")
+    a_circum = fc.circumstances.get(a_cricum, "")
+    cols = [st, ori, i_no, i_yr, i_mo, i_day, v_id, ucr, v_type,\
+            age_, sex_, race_, ethni, a_circum, a_grp]
+    TOPIC[cat].append(cols)
+    
 def parse_offender(rec, cat):
-    return None
-        
-# =============================================================================
+    st = get_code(rec, 2, 4)
+    st = fc.state_code.get(st, "")
+    ori = get_code(rec, 4, 13)
+    i_no = get_code(rec, 13, 25)
+    i_yr = get_code(rec, 25, 29)
+    i_mo = get_code(rec, 29, 31)
+    i_day = get_code(rec, 31, 33)
+    o_id = get_code(rec, 33, 35)
+    age_ = get_code(rec, 35, 37)
+    age_ = get_num(fc.age(age_, ""))
+    sex_ = get_letter(rec, 37)
+    sex_ = fc.sex.get(sex_, "")
+    race_ = get_letter(rec, 38)
+    race_ = fc.race.get(race_, "")
+    col = [st, ori, i_no, i_yr, i_mo, i_day, o_id, age_, sex_, race_]
+    TOPIC[cat].append(cols)
+    
+def get_code(record, lb, ub):
+    try:
+        code = record[lb:ub]
+        return code
+    except:
+        return ""
+    
+def get_letter(record, idx):
+    try:
+        code = record[idx]
+        return code
+    except:
+        return ""
+    
+def get_num(num):
+    try:
+        num = int(num)
+        return num
+    except:
+        return ""
+    
+# def parse_property(rec):
+#     cat = "property"
+
 # def parse_arrestee(rec):
 #     cat = "arrestee"
-#     return None
-# 
-# def parse_arrrest(record, cat):
-#     return None
-# =============================================================================
-    
 
-    
-    
+# def parse_arrrest(record, cat):
+
 
 if __name__ == "__main__":
     YEAR = sys.argv[1]
     logging.basicConfig(filename="./logs/{}.txt".format(YEAR), level=logging.INFO)
     logging.info("\nBeginning: {}".format(time.ctime(time.time())))  
     text = sys.stdin.read()
-    go(text)
-    
-
+    parse(text)
