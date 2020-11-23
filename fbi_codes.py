@@ -1,9 +1,72 @@
 import us
 
-state_code = us.states.mapping('fips', 'name')
+state_code = us.states.mapping('fips', 'abbr')
 
-state_abbr = us.states.mapping('abbr', 'name')
 
+type_loss = {
+    "1": "None",
+    "2":"Burned",
+    "3":"Counterfeited/Forged",
+    "4":"Destroyed /Damaged/Vandalized",
+    "5":"Recovered",
+    "6":"Seized",
+    "7":"Stolen/Etc.",
+    "8":"Unknown"
+    }
+y_n = {
+       "Y":True,
+       "N":False
+       }
+
+flag = {
+        " ": False,
+        "A":True
+        }
+
+property_ ={
+    "01":"Aircraft",
+    "02":"Alcohol",
+    "03":"Automobiles",
+    "04":"Bicycles",
+    "05":"Buses",
+    "06":"Clothes/Furs",
+    "07":"Computer Hardware/Software",
+    "08":"Consumable Goods",
+    "09":"Credit/Debit Cards",
+    "10":"Drugs/Narcotics",
+    "11":"Drug/Narcotic Equip.",
+    "12":"Farm Equipment",
+    "13":"Firearms",
+    "14":"Gambling Equipment",
+    "15":"Heavy Construction/Industrial Equipment",
+    "16":"Household Goods",
+    "17":"Jewelry/Precious Metals",
+    "18":"Livestock",
+    "19":"Merchandise",
+    "20":"Money",
+    "21":"Negotiable Instruments",
+    "22":"Nonnegotiable Instruments",
+    "23":"Office-Type Equipment",
+    "24":"Other Motor Vehicles",
+    "25":"Purses/Handbags/Wallets",
+    "26":"Radios/TVs/VCRs",
+    "27":"Recordings-Audio/Visual",
+    "28":"Recreational Vehicles",
+    "29":"Structures-Single Occupancy Dwellings",
+    "30":"Structures-Other Dwellings",
+    "31":"Structures - Commercial / Business",
+    "32":"Structures - Industrial/Manufacturing",
+    "33":"Structures Public/ Community",
+    "34":"Structures-Storage",
+    "35":"Structures-Other",
+    "36":"Tools-Power /Hand",
+    "37":"Trucks",
+    "38":"Vehicle Parts/Accessories",
+    "39":"Watercraft",
+    "77":"Other",
+    "88":"Pending Inventory (of Property)",
+    "99":"Special Category"    
+    }
 
 circumstance = {
     "01":"Argument",
@@ -79,6 +142,7 @@ victim_type = {
     }
 
 weapon = {
+    "01":"Unarmed",
     "11": "Firearm (type not stated)",
     "12":"Handgun",
     "13":"Rifle",
@@ -98,6 +162,16 @@ weapon = {
     "90":"Other",
     "95":"Unknown",
     "99":"None"
+    }
+
+automatic ={
+    "A":True,
+    " ":False
+    }
+
+attempt_complete ={
+    "A":False,
+    "C":True
     }
 
 bias = {
@@ -241,8 +315,8 @@ offenses = {
     "23F":"Larceny/Theft",
     "23G":"Larceny/Theft",
     "23H":"Larceny/Theft",
-    "240": "PROPERTY-Motor Vehicle Theft",
-    "370":"SOCIETY ~Pornography/Obscene Material",
+    "240": "Motor Vehicle Theft",
+    "370":"Pornography/Obscene Material",
     "40A":"Prostitution Offenses",
     "40B": "Prostitution Offenses",
     "120":"Robbery",

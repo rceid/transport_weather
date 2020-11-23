@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-
+mkdir ./logs
 year=2018
 while [ $year -le 2019 ]
 do
