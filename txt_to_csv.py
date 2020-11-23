@@ -3,6 +3,7 @@
 import sys
 import csv
 import os
+import fbi_codes
 
 TOPIC = {
     "batch_header": [],
@@ -34,21 +35,53 @@ def go(text):
             parse_admin(record)
         elif cat == "02":
             parse_offense(record)
-        elif cat == 
-        elif cat ==:
-        elif cat ==:
-        elif cat ==:
-            
+        elif cat == "03":
+            parse_property(record)
+        elif cat == "04":
+            parse_victim(record)
+        elif cat == "05":
+            parse_offender(record)
+        elif cat == "06":
+            parse_arrestee(record)
+        elif cat == "07":
+            parse_arrrest(record)
+    for topic, rows in TOPIC: #writing all records to csv
+        if rows:
+            with open(CSV_FOLDER + "/{}-{}.csv".format(topic, YEAR), "w") as file:
+                writer = csv.writer(file)
+                writer.writerows(rows)
+
+def parse_bh(record):
+    return None
         
-    offense_file.append([lines[0], 0])
-    offense_file.append([lines[1], 2])
-    with open(CSV_FOLDER + "/offense-{}.csv".format(YEAR), "w") as file:
-        writer = csv.writer(file)
-        writer.writerows(offense_file)
-    with open(CSV_FOLDER + "/dummy-{}.csv".format(YEAR), "w") as file:
-        writer = csv.writer(file)
-        writer.writerows(offense_file)
+def parse_bh2(record):
+    return None
+        
+def parse_bh3(record):
+    return None
+        
+def parse_admin(record):
+    return None
+        
+def parse_offense(record):
+    return None
+        
+def parse_property(record):
+    return None
+        
+def parse_victim(record):
+    return None
+        
+def parse_offender(record):
+    return None
+        
+def parse_arrestee(record):
+    return None
+
+def parse_arrrest(record):
+    return None
     
+
     
     
 
