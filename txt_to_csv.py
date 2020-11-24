@@ -23,19 +23,20 @@ TOPIC = {
 
 def parse(text):
     CSV_FOLDER = "./CSVs"
-    os.mkdir(CSV_FOLDER)
     start = time.perf_counter()
     lines = text.splitlines()
     n = len(lines)
     logging.info("\n{} minutes to tokenize {} lines".format((time.perf_counter() - start)/60, n))
     parse = time.perf_counter()
-    for record in lines: #parsing each record
+    for idx, record in enumerate(lines): #parsing each record
+        if idx % 1_000_000 == 0:
+            logging.info("line {} @ {}".format(idx, time.ctime(time.time())))
         cat = record[0:2]
         if cat == "BH":
             parse_bh(record, cat)
         elif cat == "B2" or cat == "B3":
             parse_bh_other(record, cat)
-        elif cat == "01" or "W1":
+        elif cat == "01" or cat == "W1":
             parse_admin(record)
         elif cat == "02":
             parse_offense(record, cat)
@@ -51,13 +52,13 @@ def parse(text):
 #             parse_arrrest(record, cat)
 
     logging.info("\n{} minutes to parse all text".format((parse - time.perf_counter())/60))
-    to_csv = time.perf_counter
-    for topic, rows in TOPIC: #writing all records to csv
+    to_csv = time.perf_counter()
+    for topic, rows in TOPIC.items(): #writing all records to csv
         if rows:
             with open(CSV_FOLDER + "/{}-{}.csv".format(topic, YEAR), "w") as file:
                 writer = csv.writer(file)
                 writer.writerows(rows)
-    end = time.perf_counter
+    end = time.perf_counter()
     logging.info("\n{} minutes to write text to csv \n{} lines per minute".\
                  format((end - to_csv)/60, n/((end - start)/ 60)))
     logging.info("\nCSVs written, script complete: {}".\
@@ -65,11 +66,11 @@ def parse(text):
 
     
 def parse_bh(rec, cat):
-    st = get_code(rec, 71, 73)
+    st = get_code(rec, 4,6)
     ori = get_code(rec, 4, 13)
     i_no = get_code(rec, 13, 25)
-    nbr_yr = get_code(rec, 25, 29)
-    nbr_mo = get_code(rec, 29, 31)
+    nbr_yr = get_code(rec, 33, 37)
+    nbr_mo = get_code(rec, 37, 39)
     city = get_code(rec, 41, 71)
     div = get_letter(rec, 75)
     div = fc.division.get(div, "")
@@ -89,8 +90,7 @@ def parse_bh(rec, cat):
     TOPIC[cat].append(cols)
     
 def parse_bh_other(rec, cat):
-    st = get_code(rec, 2, 4)
-    st = fc.state_code.get(st, "")
+    st = get_code(rec, 4,6)
     ori = get_code(rec, 4, 13)
     pop = get_code(rec, 25, 34)
     pop = get_num(pop)
@@ -99,8 +99,7 @@ def parse_bh_other(rec, cat):
 
 def parse_admin(rec):
     cat = "administrative"
-    st = get_code(rec, 2, 4)
-    st = fc.state_code.get(st, "")
+    st = get_code(rec, 4,6)
     ori = get_code(rec, 4, 13)
     i_no = get_code(rec, 13, 25)
     i_yr = get_code(rec, 25, 29)
@@ -123,8 +122,7 @@ def parse_admin(rec):
     TOPIC[cat].append(cols)
     
 def parse_offense(rec, cat):
-    st = get_code(rec, 2, 4)
-    st = fc.state_code.get(st, "")
+    st = get_code(rec, 4,6)
     ori = get_code(rec, 4, 13)
     i_no = get_code(rec, 13, 25)
     i_yr = get_code(rec, 25, 29)
@@ -148,8 +146,7 @@ def parse_offense(rec, cat):
     TOPIC[cat].append(cols)
         
 def parse_victim(rec, cat):
-    st = get_code(rec, 2, 4)
-    st = fc.state_code.get(st, "")
+    st = get_code(rec, 4,6)
     ori = get_code(rec, 4, 13)
     i_no = get_code(rec, 13, 25)
     i_yr = get_code(rec, 25, 29)
@@ -161,7 +158,7 @@ def parse_victim(rec, cat):
     v_type = get_letter(rec, 66)
     v_type = fc.victim_type.get(v_type, "")
     age_ = get_code(rec, 67, 69)
-    age_ = get_num(fc.age(age_, ""))
+    age_ = get_num(fc.age.get((age_, "")))
     sex_ = get_letter(rec, 69)
     sex_ = fc.sex.get(sex_, "")
     race_ = get_letter(rec, 70)
@@ -170,14 +167,13 @@ def parse_victim(rec, cat):
     ethni = fc.race.get(ethni, "")
     a_circum = get_code(rec, 73, 75)
     a_grp = fc.circumstance_group.get(a_circum, "")
-    a_circum = fc.circumstances.get(a_circum, "")
+    a_circum = fc.circumstance.get(a_circum, "")
     cols = [st, ori, i_no, i_yr, i_mo, i_day, v_id, ucr, v_type,\
             age_, sex_, race_, ethni, a_circum, a_grp]
     TOPIC[cat].append(cols)
     
 def parse_offender(rec, cat):
-    st = get_code(rec, 2, 4)
-    st = fc.state_code.get(st, "")
+    st = get_code(rec, 4,6)
     ori = get_code(rec, 4, 13)
     i_no = get_code(rec, 13, 25)
     i_yr = get_code(rec, 25, 29)
@@ -185,7 +181,7 @@ def parse_offender(rec, cat):
     i_day = get_code(rec, 31, 33)
     o_id = get_code(rec, 33, 35)
     age_ = get_code(rec, 35, 37)
-    age_ = get_num(fc.age(age_, ""))
+    age_ = get_num(fc.age.get((age_, "")))
     sex_ = get_letter(rec, 37)
     sex_ = fc.sex.get(sex_, "")
     race_ = get_letter(rec, 38)
