@@ -1,5 +1,5 @@
 beeline -u jdbc:hive2://localhost:10000/default -n hadoop -d org.apache.hive.jdbc.HiveDriver
--- divvy csv in HDFS to Hive:
+-- weather csv in HDFS to Hive:
 
 create external table reid7_weather_csv(
   Station string,
@@ -46,7 +46,7 @@ STORED AS TEXTFILE
 select * from reid7_divvy_csv limit 10;
 
 
--- Create an ORC table for divvy data (Note "stored as ORC" at the end)
+-- Create an ORC table for weather data (Note "stored as ORC" at the end)
 create external table reid7_weather(
   Station string,
   name string,
