@@ -70,10 +70,11 @@ monthly_totals.write.mode(SaveMode.Overwrite).saveAsTable("reid7_transport_weath
 //first, monthly averages to join on daily
 val monthly_avgs= spark.sql(
   """select dd.year, dd.month, cast(avg(trip_duration/total_trips) as int) as avg_div_duration,
-    cast(avg(total_trips) as int) as avg_div_trips, cast(avg(total_bus) as int) as avg_bus_rides,
-    cast(avg(total_rail) as int) as avg_train_rides, cast(avg(total_rides) as int) as avg_total_rides from
+    cast(avg(total_trips) as int) as avg_div_trips, cast(avg(total_bus)/count(1) as int) as avg_bus_rides,
+    cast(avg(total_rail)/count(1) as int) as avg_train_rides, cast(avg(total_rides)/count(1) as int) as avg_total_rides from
     divvy_daily dd join cta_mo cta on dd.month = cta.month and dd.year = cta.year group by dd.month, dd.year;""")
 monthly_avgs.createOrReplaceTempView("monthly_avgs")
+
 
 val daily_totals = spark.sql(
   """select w.year, w.month, w.day, avg_precipitation, avg_snow,
