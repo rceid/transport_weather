@@ -38,10 +38,73 @@ hclient.table('spertus_ontime_by_year').scan({
 
 
 app.use(express.static('public'));
-app.get('/home',function (req, res) {
-	var html = mustache.render(`Home page`)
+app.get('/home.html',function (req, res) {
+	var template = filesystem.readFileSync("home.mustache").toString();
+	var html = mustache.render(template)
 	res.send(html)
 });
+
+app.get('/divvy-cta-yearly.html', function (req, res) {
+	hclient.table('reid7_yrs').scan({ maxVersions: 1}, (err,rows) => {
+		var template = filesystem.readFileSync("divvy-cta-yearly.mustache").toString();
+		var html = mustache.render(template, {
+			years : rows
+		});
+		res.send(html)
+	})
+});
+
+app.get('/yearly-stats.html',function (req, res) {
+	const year=req.query['year'];
+	console.log(year);
+	function processMonthRecord(monthRecord) {
+		var result = { month : monthRecord['month']};
+		['avg_precipitation', 'avg_snow','avg_temp','total_trips', 'average_age', 'total_rides'].forEach(col =>{
+			result[col] = monthRecord[col]
+		})
+		result['avg_trip_duration'] = (monthRecord['trip_duration'] / monthRecord['total_trips'] *60).toFixed(1);
+		result['share_subscribers'] = (monthRecord['subscribers'] / (monthRecord['subscribers'] + monthRecord['non_subscribers'])).toFixed(1)+"%";
+		result['share_bus_trips'] = (monthRecord['total_bus_trips'] / monthRecord['total_rides']).toFixed(1)+"%";
+		result['share_rail_trips'] = (monthRecord['total_rail_trips'] / monthRecord['total_rides']).toFixed(1)+"%";
+		result['total_rides'] = monthRecord['total_rides']
+		return result;
+	}
+	function transportInfo(cells) {
+		var result = [];
+		var monthRecord;
+		cells.forEach(function(cell) {
+			var month = Number(removePrefix(cell['key'], year + "-"))
+			if(monthRecord === undefined)  {
+				monthRecord = { month: month }
+			} else if (monthRecord['month'] != month ) {
+				result.push(processMonthRecord(monthRecord))
+				monthRecord = { month: month }
+			}
+			monthRecord[removePrefix(cell['column'],'stat:')] = Number(cell['$']) //might have to fix the byte here
+		})
+		result.push(processMonthRecord(monthRecord))
+		console.info(result)
+		return result;
+	}
+
+	hclient.table('reid7_weather_transport_monthly').scan({
+			filter: {type : "PrefixFilter",
+				value: year},
+			maxVersions: 1},
+		(err, cells) => {
+			var ti = transportInfo(cells);
+			var template = filesystem.readFileSync("year-result.mustache").toString();
+			var html = mustache.render(template, {
+				airlineInfo : ti,
+				year : year
+			});
+			res.send(html)
+
+		})
+});
+
+
+
 
 app.get('/delays.html',function (req, res) {
     const route=req.query['origin'] + req.query['dest'];

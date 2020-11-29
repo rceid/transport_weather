@@ -54,9 +54,26 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Ray\OneDrive\Documents\wsl\git\nibrs_project\transport_weather_app" />
+    </key>
+  </component>
   <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="app.js" type="NodeJSConfigurationType" application-parameters="3000 localhost 8070" path-to-node="$PROJECT_DIR$/../../../../../../../../Program Files/nodejs/node" nameIsGenerated="true" path-to-js-file="app.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -69,7 +86,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1606607386625</updated>
-      <workItem from="1606607388020" duration="782000" />
+      <workItem from="1606607388020" duration="9231000" />
     </task>
     <servers />
   </component>
@@ -88,25 +105,29 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
+    <state x="2229" y="62" key="#Inspections" timestamp="1606611655924">
+      <screen x="1920" y="0" width="1366" height="768" />
+    </state>
+    <state x="2229" y="62" key="#Inspections/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606611655924" />
     <state x="2057" y="39" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606607464963">
       <screen x="1920" y="0" width="1366" height="768" />
     </state>
     <state x="2057" y="39" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606607464963" />
-    <state width="1323" height="192" key="GridCell.Tab.0.bottom" timestamp="1606608156409">
+    <state width="653" height="258" key="GridCell.Tab.0.bottom" timestamp="1606615767953">
       <screen x="1920" y="0" width="1366" height="768" />
     </state>
-    <state width="1323" height="192" key="GridCell.Tab.0.bottom/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606608156409" />
-    <state width="1323" height="192" key="GridCell.Tab.0.center" timestamp="1606608156409">
+    <state width="653" height="258" key="GridCell.Tab.0.bottom/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606615767953" />
+    <state width="653" height="258" key="GridCell.Tab.0.center" timestamp="1606615767953">
       <screen x="1920" y="0" width="1366" height="768" />
     </state>
-    <state width="1323" height="192" key="GridCell.Tab.0.center/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606608156409" />
-    <state width="1323" height="192" key="GridCell.Tab.0.left" timestamp="1606608156409">
+    <state width="653" height="258" key="GridCell.Tab.0.center/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606615767953" />
+    <state width="653" height="258" key="GridCell.Tab.0.left" timestamp="1606615767953">
       <screen x="1920" y="0" width="1366" height="768" />
     </state>
-    <state width="1323" height="192" key="GridCell.Tab.0.left/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606608156409" />
-    <state width="1323" height="192" key="GridCell.Tab.0.right" timestamp="1606608156409">
+    <state width="653" height="258" key="GridCell.Tab.0.left/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606615767953" />
+    <state width="653" height="258" key="GridCell.Tab.0.right" timestamp="1606615767953">
       <screen x="1920" y="0" width="1366" height="768" />
     </state>
-    <state width="1323" height="192" key="GridCell.Tab.0.right/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606608156409" />
+    <state width="653" height="258" key="GridCell.Tab.0.right/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606615767953" />
   </component>
 </project>
