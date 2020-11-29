@@ -9,12 +9,12 @@
       &nbsp;Monthly Transport and Weather info for {{key}} {{value}} &nbsp;</div>
     <p style="bottom-margin:10px">
       <table class="CSS_Table_Example" style="width:60%;margin:auto;">
-        <tr><td>Year</td><td>Month</td><td>Day</td><td>Avg Daily Precip. (in.)</td><td>Avg daily Snowfall (in.)</td>
+        <tr><td>YYYY-MM</td><td>Day</td><td>Avg Daily Precip. (in.)</td><td>Avg daily Snowfall (in.)</td>
             <td>Temp- erature (°F)</td><td>% Diff from Monthly Avg: Divvy Trip Duration</td>
             <td>% Diff from Monthly Avg: # Divvy Rides</td><td>% Diff from Monthly Avg: Bus Rides</td>
             <td>% Diff from Monthly Avg: Rail Rides</td><td>% Diff from Monthly Avg: # CTA Rides</td></tr>
         {{#weatherInfo}}
-            <tr><td><b>{{year}}</b><td><b>{{month}}</b><td><b>{{day}}</b><td>{{avg_precipitation}}</td></td><td>{{avg_snow}}</td>
+            <tr><td><b>{{year}}-{{month}}</b><td><b>{{day}}</b><td>{{avg_precipitation}}</td></td><td>{{avg_snow}}</td>
                 <td>{{avg_temp}}</td><td>{{pct_diff_duration}}</td><td>{{pct_diff_d_trips}}</td><td>{{pct_diff_bus}}</td>
                 <td>{{pct_diff_rail}}</td><td>{{pct_diff_cta_trips}}</td></tr>
         {{/weatherInfo}}

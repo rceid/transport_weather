@@ -30,7 +30,17 @@ app.get('/divvy-cta-yearly.html', function (req, res) {
 
 app.get('/snow.html', function (req, res) {
 	hclient.table('reid7_snow_categories').scan({ maxVersions: 1}, (err,rows) => {
-		var template = filesystem.readFileSync("weather-category.mustache").toString();
+		var template = filesystem.readFileSync("snow-category.mustache").toString();
+		var html = mustache.render(template, {
+			categories : rows
+		});
+		res.send(html)
+	})
+});
+
+app.get('/precipitation.html', function (req, res) {
+	hclient.table('reid7_precip_categories').scan({ maxVersions: 1}, (err,rows) => {
+		var template = filesystem.readFileSync("precip-category.mustache").toString();
 		var html = mustache.render(template, {
 			categories : rows
 		});
@@ -105,9 +115,8 @@ app.get('/yearly-stats.html',function (req, res) {
 });
 
 
-app.get('/weather-cat.html',function (req, res) {
+app.get('/snow-cat.html',function (req, res) {
 	const weather=req.query['cat'];
-
 	function processWeatherRecord(weatherRecord) {
 		try {
 			var result = {date: weatherRecord['date']};
@@ -121,7 +130,6 @@ app.get('/weather-cat.html',function (req, res) {
 		Object.keys(weatherRecord).forEach(col =>{
 			result[col] = weatherRecord[col]
 		})
-
 		result['avg_trip_duration'] = (weatherRecord['trip_duration'] / (weatherRecord['total_trips'] *60)).toFixed(1);
 		result['share_subscribers'] = (weatherRecord['subscibers'] /
 			(weatherRecord['subscibers'] + weatherRecord['non_subscribers'])).toFixed(2)*100+"%";
@@ -179,6 +187,76 @@ app.get('/weather-cat.html',function (req, res) {
 });
 
 
+app.get('/precip-cat.html',function (req, res) {
+	const weather=req.query['cat'];
+	function processWeatherRecord(weatherRecord) {
+		try {
+			var result = {date: weatherRecord['date']};
+		} catch(err) {
+			var template = filesystem.readFileSync("error.mustache").toString();
+			var html = mustache.render(template, {
+				key : weather
+			});
+			res.send(html)
+		}
+		Object.keys(weatherRecord).forEach(col =>{
+			result[col] = weatherRecord[col]
+		})
+		result['avg_trip_duration'] = (weatherRecord['trip_duration'] / (weatherRecord['total_trips'] *60)).toFixed(1);
+		result['share_subscribers'] = (weatherRecord['subscibers'] /
+			(weatherRecord['subscibers'] + weatherRecord['non_subscribers'])).toFixed(2)*100+"%";
+		result['share_bus_trips'] = ((weatherRecord['total_bus_trips'] / weatherRecord['total_rides'])*100).toFixed(0)+"%";
+		result['share_rail_trips'] = ((weatherRecord['total_rail_trips'] / weatherRecord['total_rides']*100)).toFixed(0)+"%";
+		result['pct_diff_d_trips'] = (((result['total_trips'] - result['total_trips_avg_mo']) / result['total_trips_avg_mo'])*100).toFixed(0)+"%"
+		result['trip_duration_avg_mo'] = result['trip_duration_avg_mo']/ 60
+		result['pct_diff_duration'] = (((result['avg_trip_duration'] - (result['trip_duration_avg_mo'])) / (result['trip_duration_avg_mo']))*100).toFixed(0)+"%"
+		result['pct_diff_bus'] = (((result['total_bus_trips'] - result['total_bus_avg_mo']) / result['total_bus_avg_mo'])*100).toFixed(0)+"%"
+		result['pct_diff_rail'] = (((result['total_rail_trips'] - result['total_rail_avg_mo']) / result['total_rail_avg_mo'])*100).toFixed(0)+"%"
+		result['pct_diff_cta_trips'] = (((result['total_rides'] - result['total_rides_avg_mo']) / result['total_rides_avg_mo'])*100).toFixed(0)+"%"
+		result['total_rides'] = weatherRecord['total_rides'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+		result['total_trips'] = weatherRecord['total_trips'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+		console.log(result)
+		return result;
+	}
+
+	function weatherInfo(cells) {
+		var result = [];
+		var weatherRecord;
+		cells.forEach(function(cell) {
+			var date = removePrefix(cell['key'], weather + "-")
+			if(weatherRecord === undefined)  {
+				weatherRecord = { date: date }
+			} else if (weatherRecord['date'] != date ) {
+				result.push(processWeatherRecord(weatherRecord))
+				weatherRecord = { date: date }
+			}
+			try {
+				weatherRecord[removePrefix(cell['column'], 'stat:')] = counterToNumber(cell['$'])
+			} catch (err) {
+				weatherRecord[removePrefix(cell['column'], 'stat:')] = cell['$']
+			}
+
+		})
+		result.push(processWeatherRecord(weatherRecord))
+		return result;
+	}
+
+	hclient.table('reid7_daily_precip').scan({
+			filter: {type : "PrefixFilter",
+				value: weather},
+			maxVersions: 1},
+		(err, cells) => {
+			var wi = weatherInfo(cells);
+			var template = filesystem.readFileSync("weather-result.mustache").toString();
+			var html = mustache.render(template, {
+				weatherInfo : wi,
+				key : weather,
+				value: "Precipitation"
+			});
+			res.send(html)
+
+		})
+});
 
 
 
