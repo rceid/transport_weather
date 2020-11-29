@@ -11,32 +11,6 @@ const port = Number(process.argv[2]);
 const hbase = require('hbase')
 var hclient = hbase({ host: process.argv[3], port: Number(process.argv[4])})
 
-function rowToMap(row) {
-	var stats = {}
-	row.forEach(function (item) {
-		stats[item['column']] = Number(item['$'])
-	});
-	return stats;
-}
-
-hclient.table('weather_delays_by_route').row('ORDAUS').get((error, value) => {
-	console.info(rowToMap(value))
-	console.info(value)
-})
-
-hclient.table('spertus_carriers').scan({ maxVersions: 1}, (err,rows) => {
-	console.info(rows)
-})
-
-hclient.table('spertus_ontime_by_year').scan({
-	filter: {type : "PrefixFilter",
-		      value: "AA"},
-	maxVersions: 1},
-	(err, value) => {
-	  console.info(value)
-	})
-
-
 app.use(express.static('public'));
 app.get('/home.html',function (req, res) {
 	var template = filesystem.readFileSync("home.mustache").toString();
@@ -54,40 +28,67 @@ app.get('/divvy-cta-yearly.html', function (req, res) {
 	})
 });
 
+app.get('/snow.html', function (req, res) {
+	hclient.table('reid7_snow_categories').scan({ maxVersions: 1}, (err,rows) => {
+		var template = filesystem.readFileSync("weather-category.mustache").toString();
+		var html = mustache.render(template, {
+			categories : rows
+		});
+		res.send(html)
+	})
+});
+
+
 app.get('/yearly-stats.html',function (req, res) {
 	const year=req.query['year'];
-	console.log(year);
 	function processMonthRecord(monthRecord) {
-		var result = { month : monthRecord['month']};
-		['avg_precipitation', 'avg_snow','avg_temp','total_trips', 'average_age', 'total_rides'].forEach(col =>{
+		try {
+			var result = {month: monthRecord['month']};
+		} catch(err) {
+			var template = filesystem.readFileSync("error.mustache").toString();
+			var html = mustache.render(template, {
+				key : year
+			});
+			res.send(html)
+		}
+		['avg_precipitation', 'avg_snow','avg_temp', 'average_age'].forEach(col =>{
 			result[col] = monthRecord[col]
 		})
-		result['avg_trip_duration'] = (monthRecord['trip_duration'] / monthRecord['total_trips'] *60).toFixed(1);
-		result['share_subscribers'] = (monthRecord['subscribers'] / (monthRecord['subscribers'] + monthRecord['non_subscribers'])).toFixed(1)+"%";
-		result['share_bus_trips'] = (monthRecord['total_bus_trips'] / monthRecord['total_rides']).toFixed(1)+"%";
-		result['share_rail_trips'] = (monthRecord['total_rail_trips'] / monthRecord['total_rides']).toFixed(1)+"%";
-		result['total_rides'] = monthRecord['total_rides']
+		result['total_trips'] = monthRecord['total_trips'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		result['avg_trip_duration'] = (monthRecord['trip_duration'] / (monthRecord['total_trips'] *60)).toFixed(1);
+		result['share_subscribers'] = (monthRecord['subscibers'] /
+			(monthRecord['subscibers'] + monthRecord['non_subscribers'])).toFixed(2)*100+"%";
+		result['share_bus_trips'] = ((monthRecord['total_bus_trips'] / monthRecord['total_rides'])*100).toFixed(0)+"%";
+		result['share_rail_trips'] = ((monthRecord['total_rail_trips'] / monthRecord['total_rides']*100)).toFixed(0)+"%";
+		result['total_rides'] = monthRecord['total_rides'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 		return result;
 	}
+
 	function transportInfo(cells) {
 		var result = [];
 		var monthRecord;
 		cells.forEach(function(cell) {
-			var month = Number(removePrefix(cell['key'], year + "-"))
+			var month = removePrefix(cell['key'], year + "-")
 			if(monthRecord === undefined)  {
 				monthRecord = { month: month }
 			} else if (monthRecord['month'] != month ) {
 				result.push(processMonthRecord(monthRecord))
 				monthRecord = { month: month }
 			}
-			monthRecord[removePrefix(cell['column'],'stat:')] = Number(cell['$']) //might have to fix the byte here
+			if (cell['column'] != 'stat:month') {
+				try {
+					monthRecord[removePrefix(cell['column'], 'stat:')] = counterToNumber(cell['$'])
+				} catch (err) {
+					monthRecord[removePrefix(cell['column'], 'stat:')] = cell['$']
+				}
+			}
+
 		})
 		result.push(processMonthRecord(monthRecord))
-		console.info(result)
 		return result;
 	}
 
-	hclient.table('reid7_weather_transport_monthly').scan({
+	hclient.table('reid7_transport_weather_monthly').scan({
 			filter: {type : "PrefixFilter",
 				value: year},
 			maxVersions: 1},
@@ -95,13 +96,94 @@ app.get('/yearly-stats.html',function (req, res) {
 			var ti = transportInfo(cells);
 			var template = filesystem.readFileSync("year-result.mustache").toString();
 			var html = mustache.render(template, {
-				airlineInfo : ti,
+				transportInfo : ti,
 				year : year
 			});
 			res.send(html)
 
 		})
 });
+
+
+
+
+
+
+app.get('/weather-cat.html',function (req, res) {
+	const weather=req.query['snow_cat'];
+	console.log(weather)
+	function processMonthRecord(monthRecord) {
+		try {
+			var result = {month: monthRecord['month']};
+		} catch(err) {
+			var template = filesystem.readFileSync("error.mustache").toString();
+			var html = mustache.render(template, {
+				key : year
+			});
+			res.send(html)
+		}
+		['avg_precipitation', 'avg_snow','avg_temp', 'average_age'].forEach(col =>{
+			result[col] = monthRecord[col]
+		})
+		result['total_trips'] = monthRecord['total_trips'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		result['avg_trip_duration'] = (monthRecord['trip_duration'] / (monthRecord['total_trips'] *60)).toFixed(1);
+		result['share_subscribers'] = (monthRecord['subscibers'] /
+			(monthRecord['subscibers'] + monthRecord['non_subscribers'])).toFixed(2)*100+"%";
+		result['share_bus_trips'] = ((monthRecord['total_bus_trips'] / monthRecord['total_rides'])*100).toFixed(0)+"%";
+		result['share_rail_trips'] = ((monthRecord['total_rail_trips'] / monthRecord['total_rides']*100)).toFixed(0)+"%";
+		result['total_rides'] = monthRecord['total_rides'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+		return result;
+	}
+
+	function transportInfo(cells) {
+		var result = [];
+		var monthRecord;
+		cells.forEach(function(cell) {
+			var month = removePrefix(cell['key'], year + "-")
+			if(monthRecord === undefined)  {
+				monthRecord = { month: month }
+			} else if (monthRecord['month'] != month ) {
+				result.push(processMonthRecord(monthRecord))
+				monthRecord = { month: month }
+			}
+			if (cell['column'] != 'stat:month') {
+				try {
+					monthRecord[removePrefix(cell['column'], 'stat:')] = counterToNumber(cell['$'])
+				} catch (err) {
+					monthRecord[removePrefix(cell['column'], 'stat:')] = cell['$']
+				}
+			}
+
+		})
+		result.push(processMonthRecord(monthRecord))
+		return result;
+	}
+
+	hclient.table('reid7_transport_weather_monthly').scan({
+			filter: {type : "PrefixFilter",
+				value: year},
+			maxVersions: 1},
+		(err, cells) => {
+			var ti = transportInfo(cells);
+			var template = filesystem.readFileSync("year-result.mustache").toString();
+			var html = mustache.render(template, {
+				transportInfo : ti,
+				year : year
+			});
+			res.send(html)
+
+		})
+});
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -151,6 +233,10 @@ function removePrefix(text, prefix) {
 		throw "missing prefix"
 	}
 	return text.substr(prefix.length)
+}
+
+function counterToNumber(c) {
+	return Number(Buffer.from(c).readBigInt64BE());
 }
 
 app.get('/airline-ontime-delays.html',function (req, res) {

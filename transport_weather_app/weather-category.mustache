@@ -1,11 +1,17 @@
 <!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html>
   <head>
-    <title>Weather Transport Homepage</title>
+    <title>Divvy and CTA Usage - Weather Events</title>
     <link type="text/css" rel="stylesheet" href="elegant-aero.css" />
       <style>
           input::-webkit-calendar-picker-indicator {
               display: none;/* remove default arrow */
+          }
+          .myarrow:after {
+              content: url(https://i.stack.imgur.com/i9WFO.png);
+              margin-left: -20px;
+              padding: .1em;
+              pointer-events:none;
           }
       </style>
       <script>
@@ -17,16 +23,19 @@
   </head>
   <body style='background-image:URL("bike-rain.jpg");background-repeat:no-repeat;background-position:center top;-webkit-background-size:100%;-moz-background-size:100%;-o-background-size:100%;background-size: 100%;'>
     <p style="margin-bottom:2cm"/>
-    <h1><b>Chicago Transit Use by Weather</b></h1><br>
-    <h2> An App Written by Raymond Eid for MPCS 53014:<br> Big Data Applications Architecture</h2><br>
-    <form action="/home.html" style="width:525px;height:150px;margin:0;padding-top=100px;background:#FFFFFF" target="results_iframe" class="elegant-aero">
+    <form action="/weather-cat.html" style="width:500px;height:50px;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get" target="results_iframe" class="elegant-aero">
       <div style="white-space: nowrap"><label>
-          <ul>
-        <li><a href="divvy-cta-yearly.html"><h3>Monthly Divvy and CTA usage with weather by year</h3></a></li>
-        <li><a href="airline-ontime.html"><h3>Explore Divvy and CTA usage by daily precipitation average</h3></a></li>
-        <li><a href="airline-ontime.html"><h3>Explore Divvy and CTA usage by daily snowfall average</h3></a></li>
-              <ul>
+	<span class="myarrow">
+        <span>Weather:</span>
+	<input list="categories" name="categories"/>
+          <datalist id="categories">
+              {{#categories}}
+                  <option value="{{key}}">
+              {{/categories}}
+          </datalist></span>
       </label>
+
+	 <label><input style="padding:10px" type="submit" value="Submit"></label>
       </div>
     </form>
     <p style="margin-bottom:2cm"/>
