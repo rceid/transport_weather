@@ -89,7 +89,7 @@ app.get('/weather.html',function (req, res) {
 		tornado : tornado_val
 	};
 
-	kafkaProducer.send([{ topic: 'weather-reports', messages: JSON.stringify(report)}],
+	kafkaProducer.send([{ topic: 'reid7_f_w', messages: JSON.stringify(report)}],
 		function (err, data) {
 			console.log("Kafka Error: " + err)
 			console.log(data);

@@ -1,32 +1,37 @@
 <!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html>
-  <head>
-      <form action="/home.html" style="width:200px;height:50px;margin:0;padding-top=50px;background-color: rgba(0,0,0,0.7);"
-            target="results_iframe" class="elegant-aero" >
-          <div style="white-space: nowrap"><label>
-              <a href="home.html"><h3>Return to homepage</h3></a>
-          </label>
-          </div>
-      </form>
-    <title>Submit Divvy Trip</title>
+<head>
+    <title>Submit Divvy</title>
     <link type="text/css" rel="stylesheet" href="/elegant-aero.css" />
-  </head>
-  <body style='background-image:URL("bike-rain.jpg");background-repeat:no-repeat;background-position:center top;-webkit-background-size:100%;-moz-background-size:100%;-o-background-size:100%;background-size: 100%;'>
-    <p style="margin-bottom:5px"/>
-    <h2 class="elegant-aero" style="margin-left:30%;text-align:center;display:inline-block;color:#5E5E5E;background:#FFFFFF">&nbsp;Submit Divvy Trip&nbsp;</h2>
-    <form action="/cgi-bin/submit-weather.pl" style="background:#FFFFFF;width:60%;margin:auto"  method="get" class="elegant-aero">
-      <label>
-	<span>Trip Duration:</span> <input type="number" name="duration" value="0"/>
-      </label>
-      <label style="font-weight:bold;color:#5E5E5E">
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	&nbsp;subscriber <input type="checkbox" name="subscriber" value="1"/>
-
-      </label>
-      <label>
-	<span>&nbsp;</span><input type="submit" value="Submit">
-      </label>
-    </form>
-    <iframe frameBorder="0" name="results_iframe" style="width:100%"/>
-  </body>
+</head>
+<body style='background-image:URL("bike-rain.jpg");background-repeat:no-repeat;background-position:center top;-webkit-background-size:100%;-moz-background-size:100%;-o-background-size:100%;background-size: 100%;'>
+<p style="margin-bottom:5px"/>
+<form action="/home.html" style="width:200px;height:50px;margin:0;padding-top=50px;background-color: rgba(0,0,0,0.7);"
+      target="results_iframe" class="elegant-aero" >
+<div style="white-space: nowrap"><label>
+    <a href="home.html"><h3>Return to homepage</h3></a>
+</label>
+</div>
+</form>
+<h2 class="elegant-aero" style="margin-left:30%;text-align:center;display:inline-block;color:#5E5E5E;background:#FFFFFF">&nbsp;Submit weather report&nbsp;</h2>
+<form action="/divvy.html" style="background:#FFFFFF;width:30%;margin:auto"  method="get" class="elegant-aero">
+    <label>
+        <span>Year</span> <input type="text" name="year" value="01"/>
+        <span>Month</span> <input type="text" name="month" value="01"/>
+        <span>Year of Birth</span> <input type="text" name="yob" value="1993"/>
+        <span>Trip duration:</span> <input type="number" name="duration" value="0"/>
+    </label>
+    <br>
+    <label style="font-weight:bold;color:#5E5E5E">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Subscriber&nbsp; &nbsp;<input type="checkbox" name="subscriber" value="1"/>
+    </label>
+    <br>
+    <label>
+        <span>&nbsp;</span><input type="submit" value="Submit">
+    </label>
+</form>
+<iframe frameBorder="0" name="results_iframe" style="width:100%"/>
+</body>
 </html>

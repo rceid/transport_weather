@@ -3,16 +3,16 @@ os: linux
 
 files:
   - source: /src
-    destination: /home/ec2-user/mspertus/flight_and_weather
+    destination: /home/ec2-user/reid7/fw_v2
     
 permissions:
-  - object: /home/ec2-user/mspertus/flight_and_weather/
+  - object: /home/ec2-user/reid7/fw_v2/
     pattern: "**"
     owner: ec2-user
     group: ec2-user
 
-  - object: /home/ec2-user/mspertus/
-    pattern: "flight_and_weather"
+  - object: /home/ec2-user/reid7/
+    pattern: "fw_v2"
     owner: ec2-user
     group: ec2-user
     type:

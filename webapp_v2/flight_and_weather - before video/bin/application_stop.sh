@@ -1,3 +1,3 @@
-cd /home/ec2-user/mspertus/flight_and_weather
+cd /home/ec2-user/reid7/fw_v2
 echo "Stopping app"
-forever stop mspertus_flight_and_weather
+forever stop reid7_fw_v2

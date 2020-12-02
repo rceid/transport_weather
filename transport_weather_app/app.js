@@ -66,8 +66,8 @@ app.get('/yearly-stats.html',function (req, res) {
 		})
 		result['total_trips'] = monthRecord['total_trips'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		result['avg_trip_duration'] = (monthRecord['trip_duration'] / (monthRecord['total_trips'] *60)).toFixed(1);
-		result['share_subscribers'] = (monthRecord['subscibers'] /
-			(monthRecord['subscibers'] + monthRecord['non_subscribers'])).toFixed(2)*100+"%";
+		result['share_subscribers'] = ((monthRecord['subscibers'] /
+			(monthRecord['subscibers'] + monthRecord['non_subscribers']))*100).toFixed(0)+"%";
 		result['share_bus_trips'] = ((monthRecord['total_bus_trips'] / monthRecord['total_rides'])*100).toFixed(0)+"%";
 		result['share_rail_trips'] = ((monthRecord['total_rail_trips'] / monthRecord['total_rides']*100)).toFixed(0)+"%";
 		result['total_rides'] = monthRecord['total_rides'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -143,7 +143,6 @@ app.get('/snow-cat.html',function (req, res) {
 		result['pct_diff_cta_trips'] = (((result['total_rides'] - result['total_rides_avg_mo']) / result['total_rides_avg_mo'])*100).toFixed(0)+"%"
 		result['total_rides'] = weatherRecord['total_rides'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 		result['total_trips'] = weatherRecord['total_trips'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-		console.log(result)
 		return result;
 	}
 
@@ -215,7 +214,6 @@ app.get('/precip-cat.html',function (req, res) {
 		result['pct_diff_cta_trips'] = (((result['total_rides'] - result['total_rides_avg_mo']) / result['total_rides_avg_mo'])*100).toFixed(0)+"%"
 		result['total_rides'] = weatherRecord['total_rides'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 		result['total_trips'] = weatherRecord['total_trips'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-		console.log(result)
 		return result;
 	}
 
@@ -258,7 +256,6 @@ app.get('/precip-cat.html',function (req, res) {
 		})
 });
 
-
 function removePrefix(text, prefix) {
 	if(text.indexOf(prefix) != 0) {
 		throw "missing prefix"
@@ -269,5 +266,38 @@ function removePrefix(text, prefix) {
 function counterToNumber(c) {
 	return Number(Buffer.from(c).readBigInt64BE());
 }
+
+
+/* Send simulated Divvy trips to kafka */
+var kafka = require('kafka-node');
+var Producer = kafka.Producer;
+var KeyedMessage = kafka.KeyedMessage;
+var kafkaClient = new kafka.KafkaClient({kafkaHost: process.argv[5]});
+var kafkaProducer = new Producer(kafkaClient);
+
+
+app.get('/divvy.html',function (req, res) {
+	var year = req.query['year'];
+	var month = req.query['month'];
+	var yob = req.query['yob'];
+	var trip_duration = req.query['duration'];
+	var subscriber = (req.query['subscriber']) ? 1 : 0;
+	var report = {
+		year : year,
+		month : month,
+		yob : yob,
+		trip_duration: trip_duration,
+		subscriber : subscriber
+	};
+
+	kafkaProducer.send([{ topic: 'reid7_transport_weather', messages: JSON.stringify(report)}],
+		function (err, data) {
+			console.log("Kafka Error: " + err)
+			console.log(data);
+			console.log(report);
+			res.redirect('submit-divvy-trip.html');
+		});
+});
+
 
 app.listen(port);

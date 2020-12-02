@@ -1,2 +1,2 @@
-cd /home/ec2-user/mspertus/flight_and_weather
-forever --id "mspertus_flight_and_weather" start app.js 3001 ip-172-31-11-144.us-east-2.compute.internal 8070 b-2.mpcs53014-kafka.fwx2ly.c4.kafka.us-east-2.amazonaws.com:9092,b-1.mpcs53014-kafka.fwx2ly.c4.kafka.us-east-2.amazonaws.com:9092
+cd /home/ec2-user/reid7/fw_v2
+forever --id "reid7_fw_v2" start app.js 3011 ip-172-31-11-144.us-east-2.compute.internal 8070 b-2.mpcs53014-kafka.fwx2ly.c4.kafka.us-east-2.amazonaws.com:9092,b-1.mpcs53014-kafka.fwx2ly.c4.kafka.us-east-2.amazonaws.com:9092

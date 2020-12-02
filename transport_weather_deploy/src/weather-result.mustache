@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html>
+  <head>
+    <title>Result</title>
+    <link type="text/css" rel="stylesheet" href="table.css" />
+  </head>
+  <body>
+    <div style="margin-left:275px;margin-right:auto;display:inline-block;box-shadow: 10px 10px 5px #888888;border:1px solid #000000;-moz-border-radius-bottomleft:9px;-webkit-border-bottom-left-radius:9px;border-bottom-left-radius:9px;-moz-border-radius-bottomright:9px;-webkit-border-bottom-right-radius:9px;border-bottom-right-radius:9px;-moz-border-radius-topright:9px;-webkit-border-top-right-radius:9px;border-top-right-radius:9px;-moz-border-radius-topleft:9px;-webkit-border-top-left-radius:9px;border-top-left-radius:9px;background:white">
+      &nbsp;Monthly Transport and Weather info for {{key}} {{value}} &nbsp;</div>
+    <p style="bottom-margin:10px">
+      <table class="CSS_Table_Example" style="width:60%;margin:auto;">
+        <tr><td>YYYY-MM</td><td>Day</td><td>Avg Daily Precip. (in.)</td><td>Avg daily Snowfall (in.)</td>
+            <td>Temp- erature (°F)</td><td>% Diff from Monthly Avg: Divvy Trip Duration</td>
+            <td>% Diff from Monthly Avg: # Divvy Rides</td><td>% Diff from Monthly Avg: Bus Rides</td>
+            <td>% Diff from Monthly Avg: Rail Rides</td><td>% Diff from Monthly Avg: # CTA Rides</td></tr>
+        {{#weatherInfo}}
+            <tr><td><b>{{year}}-{{month}}</b><td><b>{{day}}</b><td>{{avg_precipitation}}</td></td><td>{{avg_snow}}</td>
+                <td>{{avg_temp}}</td><td>{{pct_diff_duration}}</td><td>{{pct_diff_d_trips}}</td><td>{{pct_diff_bus}}</td>
+                <td>{{pct_diff_rail}}</td><td>{{pct_diff_cta_trips}}</td></tr>
+        {{/weatherInfo}}
+    </table>
+    </p>
+</body></html>

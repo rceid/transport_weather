@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fa37c34-8b0a-4793-b2c9-d892176df3d7" name="Default Changelist" comment="" />
+    <list default="true" id="b141bbeb-de9f-49c0-81db-cafcf2cae15a" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,10 +38,13 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
   </component>
-  <component name="ProjectId" id="1kz5qSnGGddL6ibA5Vc6fecjTYL" />
+  <component name="ProjectId" id="1l4TtO2z56JRG5gARcsUZcI6ZzQ" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -51,17 +54,28 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RunManager">
+    <configuration name="app.js" type="NodeJSConfigurationType" application-parameters="3000 localhost 8070" path-to-node="$PROJECT_DIR$/../../../../../../../../../../Program Files/nodejs/node" nameIsGenerated="true" path-to-js-file="app.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9fa37c34-8b0a-4793-b2c9-d892176df3d7" name="Default Changelist" comment="" />
-      <created>1606690772268</created>
+      <changelist id="b141bbeb-de9f-49c0-81db-cafcf2cae15a" name="Default Changelist" comment="" />
+      <created>1606852301881</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1606690772268</updated>
-      <workItem from="1606690773432" duration="757000" />
+      <updated>1606852301881</updated>
+      <workItem from="1606852302981" duration="927000" />
+      <workItem from="1606855585153" duration="12000" />
+      <workItem from="1606859606218" duration="217000" />
+      <workItem from="1606868918064" duration="862000" />
+      <workItem from="1606874299116" duration="1111000" />
+      <workItem from="1606876600024" duration="66000" />
     </task>
     <servers />
   </component>
@@ -78,5 +92,32 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="2057" y="39" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606852442627">
+      <screen x="1920" y="0" width="1366" height="768" />
+    </state>
+    <state x="2057" y="39" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606852442627" />
+    <state x="2383" y="139" key="FileChooserDialogImpl" timestamp="1606859743780">
+      <screen x="1920" y="0" width="1366" height="768" />
+    </state>
+    <state x="2383" y="139" key="FileChooserDialogImpl/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606859743780" />
+    <state width="1323" height="192" key="GridCell.Tab.0.bottom" timestamp="1606859825138">
+      <screen x="1920" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="192" key="GridCell.Tab.0.bottom/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606859825138" />
+    <state width="1323" height="192" key="GridCell.Tab.0.center" timestamp="1606859825138">
+      <screen x="1920" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="192" key="GridCell.Tab.0.center/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606859825138" />
+    <state width="1323" height="192" key="GridCell.Tab.0.left" timestamp="1606859825138">
+      <screen x="1920" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="192" key="GridCell.Tab.0.left/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606859825138" />
+    <state width="1323" height="192" key="GridCell.Tab.0.right" timestamp="1606859825138">
+      <screen x="1920" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="192" key="GridCell.Tab.0.right/0.0.1280.720/1920.0.1366.768@1920.0.1366.768" timestamp="1606859825138" />
   </component>
 </project>
