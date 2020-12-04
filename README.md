@@ -13,3 +13,6 @@ http://mpcs53014-loadbalancer-217964685.us-east-2.elb.amazonaws.com:3707/home.ht
 If load balancers are down, you may access the quick deployment here:
 http://ec2-3-15-219-66.us-east-2.compute.amazonaws.com:3707/home.html
 
+run the speedlayer:
+spark-submit --master local[2] --driver-java-options "-Dlog4j.configuration=file:///home/hadoop/ss.log4j.properties" --class StreamDivvy uber-SL-divvy-1.0-SNAPSHOT.jar b-1.mpcs53014-kafka.fwx2ly.c4.kafka.useast-2.amazonaws.com:9092,b-2.mpcs53014-kafka.fwx2ly.c4.kafka.us-east-2.amazonaws.com:9092
+

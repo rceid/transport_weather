@@ -5,7 +5,7 @@
       <paths name="mpcs53014">
         <serverdata>
           <mappings>
-            <mapping deploy="reid7/src/demoSLWA" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="reid7/prcoessDivvy" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

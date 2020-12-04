@@ -25,15 +25,17 @@ object StreamDivvy {
   hbaseConf.set("hbase.zookeeper.quorum", "localhost")
 
   val hbaseConnection = ConnectionFactory.createConnection(hbaseConf)
-  val table = hbaseConnection.getTable(TableName.valueOf("latest_weather"))
+  //val table = hbaseConnection.getTable(TableName.valueOf("latest_weather"))
   val divvyTable = hbaseConnection.getTable(TableName.valueOf("reid7_transport_weather_monthly"))
   
   def main(args: Array[String]) {
+    print("HERE############")
     if (args.length < 1) {
-      System.err.println(s"""
-        |Usage: StreamFlights <brokers> 
-        |  <brokers> is a list of one or more Kafka brokers
-        | 
+      System.err.println(
+        s"""
+           |Usage: StreamFlights <brokers>
+           |  <brokers> is a list of one or more Kafka brokers
+           |
         """.stripMargin)
       System.exit(1)
     }
@@ -64,13 +66,26 @@ object StreamDivvy {
     val serializedRecords = stream.map(_.value);
     val report = serializedRecords.map(rec => mapper.readValue(rec, classOf[DivvyReport]))
 
-    //My code, checking if the yr-mo row exists
-    val date_key = Bytes.toBytes(report.year + "-" + report.month)
-    val result = divvyTable.get(new Get(date_key))
-    if (result.isEmpty())
-    // writing the new row
-      val batchStats = reports.map(dr => {
-        val put = new Put(date_key))
+    def incrementTrip(report: DivvyReport) {
+      val date_key = Bytes.toBytes(report.year + "-" + report.month)
+      print("date_key:")
+      print(date_key)
+      val result = divvyTable.get(new Get(date_key))
+      if (!result.isEmpty()) { //Increment the row if it exists
+        val inc = new Increment(date_key)
+        inc.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("trip_duration"), report.trip_duration)
+        inc.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("subscribers"), report.subscriber)
+        inc.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("non_subscribers"), report.subscriber)
+        inc.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("total_trips"), 1)
+        divvyTable.increment(inc)
+      }
+    }
+    val processedTrip = report.map(incrementTrip)
+    val batchStats = report.map(dr => {
+      val date_key = Bytes.toBytes(dr.year + "-" + dr.month)
+      val result = divvyTable.get(new Get(date_key))
+      if (result.isEmpty()) {
+        val put = new Put(date_key);
         put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("month"), Bytes.toBytes(dr.month))
         put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("year"), Bytes.toBytes(dr.year))
         put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("trip_duration"), Bytes.toBytes(dr.trip_duration))
@@ -79,28 +94,17 @@ object StreamDivvy {
         put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("avg_precipitation"), Bytes.toBytes("-"))
         put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("avg_snow"), Bytes.toBytes("-"))
         put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("avg_temp"), Bytes.toBytes("-"))
-        put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("total_trips"), Bytes.toBytes(1))
+        put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("total_trips"), Bytes.toBytes("1"))
         put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("average_age"), Bytes.toBytes("-"))
         put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("total_bus"), Bytes.toBytes("-"))
         put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("total_rail"), Bytes.toBytes("-"))
         put.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("total_rides"), Bytes.toBytes("-"))
         divvyTable.put(put)
-      })
-      batchStats.print()
-    else
-      //Increment the row if it exists
-      val inc = new Increment(date_key)
-      inc.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("trip_duration"), result.trip_duration)
-      inc.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("subscribers"), result.subscriber)
-      inc.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("non_subscribers"), result.subscriber)
-      inc.addColumn(Bytes.toBytes("stat"), Bytes.toBytes("total_trips"), 1)
-      divvyTable.increment(inc)
-
-
-    
+      }
+    })
+    batchStats.print()
     // Start the computation
     ssc.start()
     ssc.awaitTermination()
   }
-
 }

@@ -277,16 +277,31 @@ var kafkaProducer = new Producer(kafkaClient);
 
 
 app.get('/divvy.html',function (req, res) {
+
 	var year = req.query['year'];
 	var month = req.query['month'];
-	var yob = req.query['yob'];
-	var trip_duration = req.query['duration'];
-	var subscriber = (req.query['subscriber']) ? 1 : 0;
+	var trips = Number(req.query['trips']);
+	var trip_duration = Number(req.query['duration']);
+	var subscriber = Number(req.query['sub']);
+	var non_subscriber = Number(req.query['nonsub']);
+	var avg_precip = Number(req.query['avg_precip']);
+	var avg_snow = Number(req.query['avg_snow']);
+	var avg_temp = Number(req.query['avg_temp']);
+	var total_bus = Number(req.query['total_bus']);
+	var total_rail = Number(req.query['total_rail']);
+
 	var report = {
 		year : year,
 		month : month,
+		trips: trips,
 		trip_duration: trip_duration,
-		subscriber : subscriber
+		subscriber : subscriber,
+		non_subscriber : non_subscriber,
+		avg_precip: avg_precip,
+		avg_snow : avg_snow,
+		avg_temp: avg_temp,
+		total_bus: total_bus,
+		total_rail: total_rail,
 	};
 
 	kafkaProducer.send([{ topic: 'reid7_transport_weather', messages: JSON.stringify(report)}],
