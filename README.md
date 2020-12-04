@@ -1,11 +1,14 @@
-# nibrs_project
-This repository contains code for my project for MPCS 53014 - Big Data Application Architecture.
+# trnasport_weather
 
-Data were collected from
-The City of Chicago Data Portal (CTA and DIvvy)
-The Noaa (Chicago weather)
+## This repository contains code for Raymond Eid's project for MPCS 53014 - Big Data Application Architecture.
 
-Chicago data was curled and piped into HDFS directly, while weather was obtained form the noaa website (https://www.ncdc.noaa.gov/cdo-web/search) and manually downloaded in chunks locally before sending to HDFS.
+Data were collected from:
+The City of Chicago Data Portal ([CTA] (https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97) and [Divvy] (https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97)])
+The [NOAA] (https://www.ncdc.noaa.gov/cdo-web/search;jsessionid=9AB2C2CFD9A81924521705D5879AC26B)
+
+Chicago data was curled and piped into HDFS directly, while weather was obtained form the noaa website (https://www.ncdc.noaa.gov/cdo-web/search) and manually downloaded in chunks locally before sending to HDFS. Weather files are in the 'weather' directory. 
+Running the following command from the root directory will curl and send all files to HDFS:
+$./curl_to_HDFS.sh
 
 Deployed application may be found on:
 http://mpcs53014-loadbalancer-217964685.us-east-2.elb.amazonaws.com:3707/home.html
