@@ -61,16 +61,17 @@ app.get('/yearly-stats.html',function (req, res) {
 			});
 			res.send(html)
 		}
-		['avg_precipitation', 'avg_snow','avg_temp', 'average_age'].forEach(col =>{
+		['avg_precipitation', 'avg_snow','avg_temp'].forEach(col =>{
 			result[col] = monthRecord[col]
 		})
-		result['total_trips'] = monthRecord['total_trips'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		result['avg_trip_duration'] = (monthRecord['trip_duration'] / (monthRecord['total_trips'] *60)).toFixed(1);
 		result['share_subscribers'] = ((monthRecord['subscibers'] /
 			(monthRecord['subscibers'] + monthRecord['non_subscribers']))*100).toFixed(0)+"%";
-		result['share_bus_trips'] = ((monthRecord['total_bus_trips'] / monthRecord['total_rides'])*100).toFixed(0)+"%";
-		result['share_rail_trips'] = ((monthRecord['total_rail_trips'] / monthRecord['total_rides']*100)).toFixed(0)+"%";
-		result['total_rides'] = monthRecord['total_rides'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+		result['total_rides'] = (monthRecord['total_bus_trips'] + monthRecord['total_rail_trips'])
+		result['share_bus_trips'] = ((monthRecord['total_bus_trips'] / result['total_rides']*100)).toFixed(0)+"%";
+		result['share_rail_trips'] = ((monthRecord['total_rail_trips'] / result['total_rides']*100)).toFixed(0)+"%";
+		result['total_rides'] = result['total_rides'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		result['total_trips'] = monthRecord['total_trips'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		return result;
 	}
 

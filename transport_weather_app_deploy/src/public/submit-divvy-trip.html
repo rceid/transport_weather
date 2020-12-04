@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html>
+<head>
+    <title>Submit Divvy</title>
+    <link type="text/css" rel="stylesheet" href="/elegant-aero.css" />
+</head>
+<body style='background-image:URL("bike-rain.jpg");background-repeat:repeat;background-position:center top;-webkit-background-size:100%;-moz-background-size:100%;-o-background-size:100%;background-size: 100%;'>
+<p style="margin-bottom:5px"/>
+<form action="/home.html" style="width:200px;height:50px;margin:0;padding-top=50px;background-color: rgba(0,0,0,0.7);"
+      target="results_iframe" class="elegant-aero" >
+<div style="white-space: nowrap"><label>
+    <a href="home.html"><h3>Return to homepage</h3></a>
+</label>
+</div>
+</form>
+<h2 class="elegant-aero" style="margin-left:30%;text-align:center;display:inline-block;color:#5E5E5E;background:#FFFFFF">&nbsp;Submit weather report&nbsp;</h2>
+<form action="/divvy.html" style="background:#FFFFFF;width:30%;margin:auto"  method="get" class="elegant-aero">
+    <label>
+        <span>Year</span> <input type="text" name="year" value="2020"/>
+        <span>Month</span> <input type="text" name="month" value="01"/>
+        <span>Total Trips:</span> <input type="text" name="trips" value="0"/><br>
+        <span>Trip duration (seconds):</span> <input type="text" name="duration" value="0"/><br>
+        <span>Number of Subscribers:</span> <input type="text" name="sub" value="0"/><br>
+        <span>Number of Non-subscribers:</span> <input type="text" name="nonsub" value="0"/><br>
+        <span>Total Bus Rides:</span> <input type="text" name="total_bus" value="0"/><br>
+        <span>Total Rail Rides:</span> <input type="text" name="total_rail" value="0"/><br>
+        <span>Average Temperature:</span> <input type="text" name="avg_temp" value="0"/><br>
+        <span>Average Precipitation:</span> <input type="text" name="avg_precip" value="0.0"/><br>
+        <span>Average Snowfall:</span> <input type="text" name="avg_snow" value="0.0"/><br>
+    </label>
+    <br>
+    <label>
+        <span>&nbsp;</span><input type="submit" value="Submit">
+    </label>
+</form>
+<iframe frameBorder="0" name="results_iframe" style="width:100%"/>
+</body>
+</html>
