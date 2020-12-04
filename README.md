@@ -1,4 +1,4 @@
-# trnasport_weather
+# transport_weather
 
 ## This repository contains code for Raymond Eid's project for MPCS 53014 - Big Data Application Architecture.
 
