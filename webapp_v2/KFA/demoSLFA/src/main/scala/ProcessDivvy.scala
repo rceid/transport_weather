@@ -15,7 +15,7 @@ import org.apache.hadoop.hbase.client.Get
 import org.apache.hadoop.hbase.client.Increment
 import org.apache.hadoop.hbase.util.Bytes
 
-object StreamFlights {
+object ProcessDivvy {
   val mapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
   val hbaseConf: Configuration = HBaseConfiguration.create()
@@ -25,6 +25,7 @@ object StreamFlights {
   val hbaseConnection = ConnectionFactory.createConnection(hbaseConf)
   val weatherDelaysByRoute = hbaseConnection.getTable(TableName.valueOf("weather_delays_by_route_v2"))
   val latestWeather = hbaseConnection.getTable(TableName.valueOf("latest_weather"))
+  val divvyMonthly = hbaseConnection.getTable(TableName.valueOf("reid7_transport_weather_monthly"))
   
   def getLatestWeather(station: String) = {
       val result = latestWeather.get(new Get(Bytes.toBytes(station)))
@@ -32,7 +33,7 @@ object StreamFlights {
       if(result.isEmpty())
         None
       else
-        Some(WeatherReport(
+        Some(DivvyReport(
               station,
               Bytes.toBoolean(result.getValue(Bytes.toBytes("weather"), Bytes.toBytes("fog"))),
               Bytes.toBoolean(result.getValue(Bytes.toBytes("weather"), Bytes.toBytes("rain"))),
@@ -93,11 +94,11 @@ object StreamFlights {
     val Array(brokers) = args
 
     // Create context with 2 second batch interval
-    val sparkConf = new SparkConf().setAppName("StreamFlights")
+    val sparkConf = new SparkConf().setAppName("ProcessDivvy") //ADDED THIS APP NAME HERE. Replaced processFlights
     val ssc = new StreamingContext(sparkConf, Seconds(2))
 
     // Create direct kafka stream with brokers and topics
-    val topicsSet = Set("flights")
+    val topicsSet = Set("reid7_transport_weather")  //ADDED MY TOPIC HERE, replaced 'flights'
     // Create direct kafka stream with brokers and topics
     val kafkaParams = Map[String, Object](
       "bootstrap.servers" -> brokers,

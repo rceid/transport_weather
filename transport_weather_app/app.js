@@ -285,7 +285,6 @@ app.get('/divvy.html',function (req, res) {
 	var report = {
 		year : year,
 		month : month,
-		yob : yob,
 		trip_duration: trip_duration,
 		subscriber : subscriber
 	};

@@ -56,19 +56,6 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
   </component>
-  <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -78,6 +65,8 @@
       <option name="presentableId" value="Default" />
       <updated>1606861755207</updated>
       <workItem from="1606861756755" duration="2131000" />
+      <workItem from="1606929280592" duration="2405000" />
+      <workItem from="1607093852450" duration="13000" />
     </task>
     <servers />
   </component>
@@ -94,8 +83,13 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="569" y="195" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1606929816188">
+      <screen x="0" y="0" width="1280" height="720" />
+    </state>
+    <state x="569" y="195" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1280.720/1920.0.1366.768@0.0.1280.720" timestamp="1606929816188" />
     <state x="2367" y="298" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog" timestamp="1606861845230">
       <screen x="1920" y="0" width="1366" height="768" />
     </state>
