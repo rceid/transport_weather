@@ -9,7 +9,7 @@ Deployed application may be found [here](http://mpcs53014-loadbalancer-217964685
 
 If load balancers are down, you may access the quick deployment [here](http://ec2-3-15-219-66.us-east-2.compute.amazonaws.com:3707/home.html)
 
-run the speedlayer from EMR terminal:
+To run speedlayer from EMR terminal:
 ```
 $cd reid7/processMonth/target
 
@@ -21,8 +21,7 @@ ____
 
 
 Data were collected from:
-The City of Chicago Data Portal ([CTA](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97) and [Divvy](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97)])
-The [NOAA](https://www.ncdc.noaa.gov/cdo-web/search;jsessionid=9AB2C2CFD9A81924521705D5879AC26B)
+The City of Chicago Data Portal ([CTA](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97) and [Divvy](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97)) and the [NOAA](https://www.ncdc.noaa.gov/cdo-web/search;jsessionid=9AB2C2CFD9A81924521705D5879AC26B)
 
 City of Chicago data was curled and piped into Hadoop Distributed File System (HDFS) directly, while weather was obtained form the noaa website and manually downloaded in chunks locally before sending to HDFS. Weather files are in the *weather* directory.
 
@@ -36,7 +35,9 @@ ____
 ## 3. HDFS to Apache Hive
 There is one file for each of the three data sources, all located in the *hive_hbase_spark* directory, which move the .csv files from HDFS to Hive:
 
-*create_CTA_daily.hql*, *create_divvy.hql*, and *create_weather.hql*
+- *create_CTA_daily.hql*
+- *create_divvy.hql* 
+- *create_weather.hql*
 
 Each file processes the .csv into a Hive table, then creates a subsequent Optimized Row Columnar (ORC) table to store and read the data more efficiently. 
 ____
@@ -44,17 +45,17 @@ ____
 ## 4. Data Cleaning with Scala in Spark
 Also located in the *hive_hbase_spark*, *spark_clean_join.scala* contains the commands to clean  weather, public transit, and Divvy bike share Hive tables and group them on a daily and monthly level for application views. Cleaned tables are saved directly into Hive with this script.
 ____
-## 5. Send Tables to HBase to interface with web application
-The last file in the *hive_hbase_spark* directory is *hive_to_hbase.hql*. The script creates a Hive table linked to a new HBase table, serializes the data in Hive and reserializes it in HBase. 
+## 5. Send Hive tables to HBase
+The last file in the *hive_hbase_spark* directory is *hive_to_hbase.hql*. The script creates a Hive table linked to a new HBase table, serializes the data in Hive and reserializes it in HBase. The HBase tables will interface will the web application and be queried in the appropriate views.
 
-The tables include a monthly views of public transit, bikeshare, and weather info, as well as daily view from 2014 to 2019.
+The tables include a monthly views of public transit, bikeshare, and weather info, as well as daily views. They span 2014 to 2019.
 ____
-## 6. Speed layer with Scala
+## 6. Speed Layer with Scala
 The directory *speed_layer* contains the script to create the uber-jar to be run from the EMR terminal to ingest data from the submit form of the application.
 
 The script takes the data submitted, processes it as a scala object, then adds the month as a row to the HBase table containing monthly transport and weather data. 
 ____
-## 7. The web application
+## 7. The Web Application
 Starting from the home page, the user has four views to select:
 
 **i)** *Explore Monthly Divvy and CTA usage with weather by year*: 
@@ -72,7 +73,7 @@ Slight | Greater than 0 and less than 0.04 inches
 Moderate | Greater than or equal to 0.04 and less than 0.8 inches
 Heavy | Greater than or equal to 0.8 and less than 1.5 inches
 Very Heavy | Greater or equal to 1.5 inches
-|
+
 
 
 **iii)** *Explore Divvy and CTA usage with weather by snowfall average*: 
@@ -85,7 +86,7 @@ None | 0 inches
 Slight | Greater than 0 and less than 1.0 inches
 Moderate | Greater than or equal to 1.0 and less than 3.0 inches
 Heavy | Greater than or equal to 3.0 
- | 
+ 
 
  **iv)** *Submit Monthly Divvy Data*: 
  
