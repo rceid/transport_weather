@@ -1,22 +1,92 @@
 # transport_weather
 
-## This repository contains code for Raymond Eid's project for MPCS 53014 - Big Data Application Architecture.
+# This repository contains code for Raymond Eid's project for MPCS 53014 - Big Data Application Architecture.
+
+## 1. App and speed layer info:
+
+
+Deployed application may be found [here](http://mpcs53014-loadbalancer-217964685.us-east-2.elb.amazonaws.com:3707/home.html)
+
+If load balancers are down, you may access the quick deployment [here](http://ec2-3-15-219-66.us-east-2.compute.amazonaws.com:3707/home.html)
+
+run the speedlayer from EMR terminal:
+```
+$cd reid7/processMonth/target
+
+$spark-submit --master local[2] --driver-java-options "-Dlog4j.configuration=file:///home/hadoop/ss.log4j.properties" --class StreamDivvy uber-SL-divvy-1.0-SNAPSHOT.jar b-1.mpcs53014-kafka.fwx2ly.c4.kafka.useast-2.amazonaws.com:9092,b-2.mpcs53014-kafka.fwx2ly.c4.kafka.us-east-2.amazonaws.com:9092
+```
+____
+
+## 2. Data collection
+
 
 Data were collected from:
 The City of Chicago Data Portal ([CTA](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97) and [Divvy](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97)])
-The [NOAA] (https://www.ncdc.noaa.gov/cdo-web/search;jsessionid=9AB2C2CFD9A81924521705D5879AC26B)
+The [NOAA](https://www.ncdc.noaa.gov/cdo-web/search;jsessionid=9AB2C2CFD9A81924521705D5879AC26B)
 
-Chicago data was curled and piped into HDFS directly, while weather was obtained form the noaa website (https://www.ncdc.noaa.gov/cdo-web/search) and manually downloaded in chunks locally before sending to HDFS. Weather files are in the 'weather' directory. 
+City of Chicago data was curled and piped into Hadoop Distributed File System (HDFS) directly, while weather was obtained form the noaa website and manually downloaded in chunks locally before sending to HDFS. Weather files are in the *weather* directory.
+
 Running the following command from the root directory will curl and send all files to HDFS:
+```
 $./curl_to_HDFS.sh
+```
 
-Deployed application may be found on:
-http://mpcs53014-loadbalancer-217964685.us-east-2.elb.amazonaws.com:3707/home.html
+____
 
-If load balancers are down, you may access the quick deployment here:
-http://ec2-3-15-219-66.us-east-2.compute.amazonaws.com:3707/home.html
+## 3. HDFS to Apache Hive
+There is one file for each of the three data sources, all located in the *hive_hbase_spark* directory, which move the .csv files from HDFS to Hive:
 
-run the speedlayer from EMR terminal:
-$cd reid7/processMonth/target
-$spark-submit --master local[2] --driver-java-options "-Dlog4j.configuration=file:///home/hadoop/ss.log4j.properties" --class StreamDivvy uber-SL-divvy-1.0-SNAPSHOT.jar b-1.mpcs53014-kafka.fwx2ly.c4.kafka.useast-2.amazonaws.com:9092,b-2.mpcs53014-kafka.fwx2ly.c4.kafka.us-east-2.amazonaws.com:9092
+*create_CTA_daily.hql*, *create_divvy.hql*, and *create_weather.hql*
 
+Each file processes the .csv into a Hive table, then creates a subsequent Optimized Row Columnar (ORC) table to store and read the data more efficiently. 
+____
+
+## 4. Data Cleaning with Scala in Spark
+Also located in the *hive_hbase_spark*, *spark_clean_join.scala* contains the commands to clean  weather, public transit, and Divvy bike share Hive tables and group them on a daily and monthly level for application views. Cleaned tables are saved directly into Hive with this script.
+____
+## 5. Send Tables to HBase to interface with web application
+The last file in the *hive_hbase_spark* directory is *hive_to_hbase.hql*. The script creates a Hive table linked to a new HBase table, serializes the data in Hive and reserializes it in HBase. 
+
+The tables include a monthly views of public transit, bikeshare, and weather info, as well as daily view from 2014 to 2019.
+____
+## 6. Speed layer with Scala
+The directory *speed_layer* contains the script to create the uber-jar to be run from the EMR terminal to ingest data from the submit form of the application.
+
+The script takes the data submitted, processes it as a scala object, then adds the month as a row to the HBase table containing monthly transport and weather data. 
+____
+## 7. The web application
+Starting from the home page, the user has four views to select:
+
+**i)** *Explore Monthly Divvy and CTA usage with weather by year*: 
+
+The user selects a year and is displayed the available months as rows. This view also presents the user with weather information, as well as Divvy trip and CTA usage stats. This view allows the user to explore trends in Divvy and CTA use by month while keeping weather in mind.
+
+**ii)** *Explore Divvy and CTA usage with weather by precipitation average*: 
+
+The user selects a precipitation category (codes below) and can explore percent difference in Divvy and CTA use, displayed on a daily level, as they pertain to their month's average. A user may anticipate how busy the L or buses will be as well as the availability of Divvy bikes based on similar days in the past.
+
+Category | Range
+--- | --- 
+None | 0 inches
+Slight | Greater than 0 and less than 0.04 inches
+Moderate | Greater than or equal to 0.04 and less than 0.8 inches
+Heavy | Greater than or equal to 0.8 and less than 1.5 inches
+Very Heavy | Greater or equal to 1.5 inches
+|
+
+
+**iii)** *Explore Divvy and CTA usage with weather by snowfall average*: 
+
+Similar to the precipitation view, this allows users to anticipate CTA and Divvy use based on average daily snowfall. Codes are as follows:
+
+Category | Range
+--- | --- 
+None | 0 inches
+Slight | Greater than 0 and less than 1.0 inches
+Moderate | Greater than or equal to 1.0 and less than 3.0 inches
+Heavy | Greater than or equal to 3.0 
+ | 
+
+ **iv)** *Submit Monthly Divvy Data*: 
+ 
+ The user can submit ridership data for a non-prexisting year/month combination, which is handled and processed by the speed layer. Entries will be viewable on the page *i) Explore Monthly Divvy and CTA usage with weather by year*.
