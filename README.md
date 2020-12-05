@@ -58,11 +58,11 @@ ____
 ## 7. The Web Application
 Starting from the home page, the user has four views to select:
 
-**i)** *Explore Monthly Divvy and CTA usage with weather by year*: 
+**i) Explore Monthly Divvy and CTA usage with weather by year**:
 
 The user selects a year and is displayed the available months as rows. This view also presents the user with weather information, as well as Divvy trip and CTA usage stats. This view allows the user to explore trends in Divvy and CTA use by month while keeping weather in mind.
 
-**ii)** *Explore Divvy and CTA usage with weather by precipitation average*: 
+**ii) Explore Divvy and CTA usage with weather by precipitation average**: 
 
 The user selects a precipitation category (codes below) and can explore percent difference in Divvy and CTA use, displayed on a daily level, as they pertain to their month's average. A user may anticipate how busy the L or buses will be as well as the availability of Divvy bikes based on similar days in the past.
 
@@ -76,7 +76,7 @@ Very Heavy | Greater or equal to 1.5 inches
 
 
 
-**iii)** *Explore Divvy and CTA usage with weather by snowfall average*: 
+**iii) Explore Divvy and CTA usage with weather by snowfall average**: 
 
 Similar to the precipitation view, this allows users to anticipate CTA and Divvy use based on average daily snowfall. Codes are as follows:
 
@@ -88,6 +88,6 @@ Moderate | Greater than or equal to 1.0 and less than 3.0 inches
 Heavy | Greater than or equal to 3.0 
  
 
- **iv)** *Submit Monthly Divvy Data*: 
+ **iv) Submit Monthly Divvy Data**: 
  
  The user can submit ridership data for a non-prexisting year/month combination, which is handled and processed by the speed layer. Entries will be viewable on the page *i) Explore Monthly Divvy and CTA usage with weather by year*.
