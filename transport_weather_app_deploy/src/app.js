@@ -17,6 +17,15 @@ app.get('/home.html',function (req, res) {
 	var html = mustache.render(template)
 	res.send(html)
 });
+app.get('/ml.html', function (req, res) {
+	hclient.table('reid7_ml_models').scan({ maxVersions: 1}, (err,rows) => {
+		var template = filesystem.readFileSync("ml-results.mustache").toString();
+		var html = mustache.render(template, {
+			models : rows
+		});
+		res.send(html)
+	})
+});
 
 app.get('/divvy-cta-yearly.html', function (req, res) {
 	hclient.table('reid7_yrs').scan({ maxVersions: 1}, (err,rows) => {
@@ -48,6 +57,57 @@ app.get('/precipitation.html', function (req, res) {
 	})
 });
 
+
+app.get('/ml-models.html',function (req, res) {
+	const model=req.query['model'];
+	function processModel(modelRecord) {
+		try {
+			var result = {model: modelRecord['model']};
+		} catch(err) {
+			var template = filesystem.readFileSync("error.mustache").toString();
+			var html = mustache.render(template, {
+				key : model
+			});
+			res.send(html)
+		}
+		Object.keys(modelRecord).forEach(col =>{
+			result[col] = modelRecord[col]
+		})
+		return result;
+	}
+
+	function modelInfo(cells) {
+		var result = [];
+		var modelRecord;
+		cells.forEach(function(cell) {
+			var model = cell['key']
+			if(modelRecord === undefined)  {
+				modelRecord = { model_id: model }
+			} else if (modelRecord['model_id'] != model ) {
+				result.push(processModel(modelRecord))
+				modelRecord = { model_id: model }
+			}
+			modelRecord[removePrefix(cell['column'], 'stat:')] = cell['$']
+		})
+		result.push(processModel(modelRecord))
+		return result;
+	}
+
+	hclient.table('reid7_ml_results').scan({
+			filter: {type : "PrefixFilter",
+				value: model},
+			maxVersions: 1},
+		(err, cells) => {
+			var mi = modelInfo(cells);
+			var template = filesystem.readFileSync("model-result.mustache").toString();
+			var html = mustache.render(template, {
+				modelInfo : mi,
+				model : model
+			});
+			res.send(html)
+
+		})
+});
 
 app.get('/yearly-stats.html',function (req, res) {
 	const year=req.query['year'];

@@ -20,8 +20,7 @@ ____
 ## 2. Data collection
 
 
-Data were collected from:
-The City of Chicago Data Portal ([CTA](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97) and [Divvy](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97)) and the [NOAA](https://www.ncdc.noaa.gov/cdo-web/search;jsessionid=9AB2C2CFD9A81924521705D5879AC26B)
+Data were collected from the City of Chicago Data Portal ([CTA](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97) and [Divvy](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97)) and the [NOAA](https://www.ncdc.noaa.gov/cdo-web/search;jsessionid=9AB2C2CFD9A81924521705D5879AC26B).
 
 City of Chicago data was curled and piped into Hadoop Distributed File System (HDFS) directly, while weather was obtained form the noaa website and manually downloaded in chunks locally before sending to HDFS. Weather files are in the *weather* directory.
 

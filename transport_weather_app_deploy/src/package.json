@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "compat": "^1.0.4",
     "express": "^4.17.1",
     "hbase": "^0.6.1",
     "hbase-rpc-client": "^0.1.15",
