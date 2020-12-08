@@ -195,13 +195,13 @@ rf_r2_3 = rf_r2_3 - (rf_r2_3 % .0001)
 //r2 =  0.0099
 
 val mlDF = Seq(
-  ("Linear Regression", "X", "X", "X", rmse, r2 ),
-  ("Linear Regression", "-", "X", "X", rmse_2, r2_2),
-  ("Linear Regression", "-", "-", "X", rmse_3, r2_3),
-  ("Random Forest Regression", "X", "X", "X", rf_rmse_1, rf_r2_1),
-  ("Random Forest Regression", "-", "X", "X", rf_rmse_2, rf_r2_2),
-  ("Random Forest Regression", "-", "-", "X", rf_rmse_3, rf_r2_3)
-).toDF("model", "date_features", "rider_features", "weather_features", "rmse", "r2")
+  ("Linear Regression", 1, "X", "X", "X", rmse, r2 ),
+  ("Linear Regression", 2, "-", "X", "X", rmse_2, r2_2),
+  ("Linear Regression", 3, "-", "-", "X", rmse_3, r2_3),
+  ("Random Forest Regression", 1, "X", "X", "X", rf_rmse_1, rf_r2_1),
+  ("Random Forest Regression", 2, "-", "X", "X", rf_rmse_2, rf_r2_2),
+  ("Random Forest Regression", 3, "-", "-", "X", rf_rmse_3, rf_r2_3)
+).toDF("model", "model_num", "date_features", "rider_features", "weather_features", "rmse", "r2")
 
 mlDF.write.mode(SaveMode.Overwrite).saveAsTable("reid_ML_results")
 
