@@ -63,6 +63,12 @@ The directory *sparkML* contains the two files which create two Machine Learning
 
 The file *spark_ml.scala* contains the scala code that creates the ML models used to predict Divvy Trip duration. The script combines divvy and weather data on a daily level, formats the categorical variables splits the training and testing data 80/20, spearately fits a Linear Regression and Random Forest Regression to three different subsets of features, and exports model metrics to Hive. The three different subsets are i) date, divvy rider, and weather features; ii) rider and weather features; and iii) just weather features. Evaluation metrics include R<sup>2</sup> and Root Mean Squared Error.
 
+Features are broken down as follows:
+
+- Weather features: Average precipitation, snow, and temperature
+- Rider features: Subscriber or not, aender, age
+- Date features: Year, month, year-month interaction. Interaction not used in random forest as distinct values outnumber model's buckets.
+
 File *ml_to_hbase.hql* subsequently takes the Hive table and uploads it to HBase, along with an "index" table for distinct model types used for the ML view's dropdown menu in the app.
 ___
 ## 8. The Web Application
@@ -105,6 +111,8 @@ Heavy | Greater than or equal to 3.0
  The user can submit ridership data for a non-prexisting year/month combination, which is handled and processed by the speed layer. Entries will be viewable on the page *i) Explore Monthly Divvy and CTA usage with weather by year*.
 
  **iv) View ML Models Predicting Divvy Trip Duration**: 
+
+ The user can view the two regression models using the batch layer data. Models are described in part 7) Regression Models Using Transport and Weather Data.
  ___
  
 Many thanks to to Genaro Servín, who made the application's background picture freely available at: https://www.pexels.com/photo/person-riding-a-bicycle-during-rainy-day-763398/
