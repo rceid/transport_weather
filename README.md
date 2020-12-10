@@ -13,7 +13,7 @@ Deployed application may be found [here](http://mpcs53014-loadbalancer-217964685
 
 If load balancers are down, you may access the quick deployment [here](http://ec2-3-15-219-66.us-east-2.compute.amazonaws.com:3707/home.html)
 
-To run speedlayer from EMR terminal:
+Use the following commands from the EMR terminal's root directory to run speed layer:
 ```
 $cd reid7/processMonth/target
 
@@ -46,12 +46,12 @@ Each file processes the .csv into a Hive table, then creates a subsequent Optimi
 ____
 
 ## 4. Data Cleaning with Scala in Spark
-Also located in the *hive_hbase_spark*, *spark_clean_join.scala* contains the commands to clean  weather, public transit, and Divvy bike share Hive tables and group them on a daily and monthly level for application views. Cleaned tables are saved directly into Hive with this script.
+Also located in the *hive_hbase_spark* directory, *spark_clean_join.scala* contains the commands to clean  weather, public transit, and Divvy bike share Hive tables and group them on a daily and monthly level for application views. Cleaned tables are also saved directly into Hive in this script.
 ____
 ## 5. Send Hive tables to HBase
 The last file in the *hive_hbase_spark* directory is *hive_to_hbase.hql*. The script creates a Hive table linked to a new HBase table, serializes the data in Hive and reserializes it in HBase. The HBase tables will interface will the web application and be queried in the appropriate views.
 
-The tables include a monthly views of public transit, bikeshare, and weather info, as well as daily views. They span 2014 to 2019.
+The tables include a monthly views of public transit, bikeshare, and weather info, as well as daily views. They span mid-2013 to end-2019, the timeframe over which Divvy data is available. 
 ____
 ## 6. Speed Layer with Scala
 The directory *speed_layer* contains the script to create the uber-jar to be run from the EMR terminal to ingest data from the submit form of the application.
@@ -61,15 +61,15 @@ ____
 ## 7. Regression Models Using Transport and Weather Data
 The directory *sparkML* contains the two files which create two Machine Learning models and upload them to Hive and HBase. 
 
-The file *spark_ml.scala* contains the scala code that creates the ML models used to predict Divvy Trip duration. The script combines divvy and weather data on a daily level, formats the categorical variables splits the training and testing data 80/20, spearately fits a Linear Regression and Random Forest Regression to three different subsets of features, and exports model metrics to Hive. The three different subsets are i) date, divvy rider, and weather features; ii) rider and weather features; and iii) just weather features. Evaluation metrics include R<sup>2</sup> and Root Mean Squared Error.
+The file *spark_ml.scala* contains the scala code that creates the ML models used to predict Divvy trip duration in seconds. The script combines divvy and weather data on a daily level, formats the categorical variables splits the training and testing data 80/20, spearately fits a Linear Regression and Random Forest Regression to three different subsets of features, and exports model metrics to Hive. The three different subsets are i) date, divvy rider, and weather features; ii) rider and weather features; and iii) just weather features. Evaluation metrics include R<sup>2</sup> and Root Mean Squared Error.
 
 Features are broken down as follows:
 
 - Weather features: Average precipitation, snow, and temperature
-- Rider features: Subscriber or not, aender, age
-- Date features: Year, month, year-month interaction. Interaction not used in random forest as distinct values outnumber model's buckets.
+- Rider features: Subscriber or not, gender, age
+- Date features: Year, month, year-month interaction. *Note:* interaction term not used in random forest as distinct values outnumber model buckets.
 
-File *ml_to_hbase.hql* subsequently takes the Hive table and uploads it to HBase, along with an "index" table for distinct model types used for the ML view's dropdown menu in the app.
+File *ml_to_hbase.hql* subsequently takes the Hive table and uploads it to HBase, along with an "index" table for distinct model types, used in the ML view's dropdown menu in the app.
 ___
 ## 8. The Web Application
 Starting from the home page, the user has four views to select:
@@ -80,7 +80,7 @@ The user selects a year and is displayed the available months as rows. This view
 
 **ii) Explore Divvy and CTA usage with weather by precipitation average**: 
 
-The user selects a precipitation category (codes below) and can explore percent difference in Divvy and CTA use, displayed on a daily level, as they pertain to their month's average. A user may anticipate how busy the L or buses will be as well as the availability of Divvy bikes based on similar days in the past.
+The user selects a precipitation category (codes below) and can explore percent difference in Divvy and CTA use, displayed on a daily level, as they pertain to their month's average. A user may anticipate how busy the L or buses will be along with availability of Divvy bikes based on similar days in the past.
 
 Category | Range
 --- | --- 
@@ -90,7 +90,6 @@ Moderate | Greater than or equal to 0.04 and less than 0.8 inches
 Heavy | Greater than or equal to 0.8 and less than 1.5 inches
 Very Heavy | Greater or equal to 1.5 inches
 
-.
 
 **iii) Explore Divvy and CTA usage with weather by snowfall average**: 
 
@@ -103,14 +102,13 @@ Slight | Greater than 0 and less than 1.0 inches
 Moderate | Greater than or equal to 1.0 and less than 3.0 inches
 Heavy | Greater than or equal to 3.0 
  
- .
 
 
 **iv) Submit Monthly Divvy Data**: 
  
  The user can submit ridership data for a non-prexisting year/month combination, which is handled and processed by the speed layer. Entries will be viewable on the page *i) Explore Monthly Divvy and CTA usage with weather by year*.
 
- **iv) View ML Models Predicting Divvy Trip Duration**: 
+ **v) View ML Models Predicting Divvy Trip Duration**: 
 
  The user can view the two regression models using the batch layer data. Models are described in part 7) Regression Models Using Transport and Weather Data.
  ___
