@@ -2,6 +2,10 @@
 
 # This repository contains code for Raymond Eid's project for MPCS 53014 - Big Data Application Architecture.
 
+## 0. Video Overview
+The video at this [link](https://www.loom.com/share/9f9fd4db9b854d2f9e5ada41c6b983ef) gives and overview of the application interface as well as the batch, serving, and speed layers. Machine learning models are briefly discussed as well.
+___
+
 ## 1. App and speed layer info:
 
 
@@ -20,7 +24,7 @@ ____
 ## 2. Data collection
 
 
-Data were collected from the City of Chicago Data Portal ([CTA](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97) and [Divvy](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97)) and the [NOAA](https://www.ncdc.noaa.gov/cdo-web/search;jsessionid=9AB2C2CFD9A81924521705D5879AC26B).
+Data were collected from the City of Chicago Data Portal ([CTA](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97) and [Divvy](https://data.cityofchicago.org/Transportation/CTA-Ridership-Daily-Boarding-Totals/6iiy-9s97)) and the US [National Oceanic and Atmospheric Administration](https://www.ncdc.noaa.gov/cdo-web/search;jsessionid=9AB2C2CFD9A81924521705D5879AC26B).
 
 City of Chicago data was curled and piped into Hadoop Distributed File System (HDFS) directly, while weather was obtained form the noaa website and manually downloaded in chunks locally before sending to HDFS. Weather files are in the *weather* directory.
 
@@ -54,7 +58,14 @@ The directory *speed_layer* contains the script to create the uber-jar to be run
 
 The script takes the data submitted, processes it as a scala object, then adds the month as a row to the HBase table containing monthly transport and weather data. 
 ____
-## 7. The Web Application
+## 7. Regression Models Using Transport and Weather Data
+The directory *sparkML* contains the two files which create two Machine Learning models and upload them to Hive and HBase. 
+
+The file *spark_ml.scala* contains the scala code that creates the ML models used to predict Divvy Trip duration. The script combines divvy and weather data on a daily level, formats the categorical variables splits the training and testing data 80/20, spearately fits a Linear Regression and Random Forest Regression to three different subsets of features, and exports model metrics to Hive. The three different subsets are i) date, divvy rider, and weather features; ii) rider and weather features; and iii) just weather features. Evaluation metrics include R<sup>2</sup> and Root Mean Squared Error.
+
+File *ml_to_hbase.hql* subsequently takes the Hive table and uploads it to HBase, along with an "index" table for distinct model types used for the ML view's dropdown menu in the app.
+___
+## 8. The Web Application
 Starting from the home page, the user has four views to select:
 
 **i) Explore Monthly Divvy and CTA usage with weather by year**:
@@ -73,7 +84,7 @@ Moderate | Greater than or equal to 0.04 and less than 0.8 inches
 Heavy | Greater than or equal to 0.8 and less than 1.5 inches
 Very Heavy | Greater or equal to 1.5 inches
 
-
+.
 
 **iii) Explore Divvy and CTA usage with weather by snowfall average**: 
 
@@ -86,7 +97,14 @@ Slight | Greater than 0 and less than 1.0 inches
 Moderate | Greater than or equal to 1.0 and less than 3.0 inches
 Heavy | Greater than or equal to 3.0 
  
+ .
 
- **iv) Submit Monthly Divvy Data**: 
+
+**iv) Submit Monthly Divvy Data**: 
  
  The user can submit ridership data for a non-prexisting year/month combination, which is handled and processed by the speed layer. Entries will be viewable on the page *i) Explore Monthly Divvy and CTA usage with weather by year*.
+
+ **iv) View ML Models Predicting Divvy Trip Duration**: 
+ ___
+ 
+Many thanks to to Genaro Servín, who made the application's background picture freely available at: https://www.pexels.com/photo/person-riding-a-bicycle-during-rainy-day-763398/
